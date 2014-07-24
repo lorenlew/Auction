@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Auction.Models.DomainModels.Stake>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.HoursForAuctionEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentStake)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LotId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ApplicationUserId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.HoursForAuctionEnd)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrentStake)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LotId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ApplicationUserId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.StakeId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.StakeId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.StakeId })
+        </td>
+    </tr>
+}
+
+</table>
