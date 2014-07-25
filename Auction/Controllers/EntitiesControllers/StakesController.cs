@@ -52,7 +52,7 @@ namespace Auction.Controllers.EntitiesControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StakeId,HoursForAuctionEnd,CurrentStake,LotId,ApplicationUserId")] Stake stake)
+        public ActionResult Create([Bind(Include = "StakeId,HoursForAuctionEnd,CurrentStake,DateOfStake,LotId,ApplicationUserId")] Stake stake)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace Auction.Controllers.EntitiesControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StakeId,HoursForAuctionEnd,CurrentStake,LotId,ApplicationUserId")] Stake stake)
+        public ActionResult Edit([Bind(Include = "StakeId,HoursForAuctionEnd,CurrentStake,DateOfStake,LotId,ApplicationUserId")] Stake stake)
         {
             if (ModelState.IsValid)
             {

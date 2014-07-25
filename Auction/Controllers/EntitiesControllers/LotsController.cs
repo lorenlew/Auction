@@ -15,15 +15,18 @@ namespace Auction.Controllers.EntitiesControllers
     {
         private ApplicationDbContext db;
 
-        public LotsController(ApplicationDbContext context)
+        public LotsController( ApplicationDbContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
             db = context;
         }
 
         // GET: Lots
         public ActionResult Index()
         {
-            return View(db.Lots.ToList());
+
+            var lotsWithStakes = ApplicationDbContext.GetLotsWithStakesViewModel();
+            return View(lotsWithStakes);
         }
 
         // GET: Lots/Details/5

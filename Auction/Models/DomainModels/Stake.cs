@@ -16,6 +16,10 @@ namespace Auction.Models.DomainModels
         [Display(Name = "Current stake")]
         public int CurrentStake { get; set; }
 
+        [Display(Name = "Date of stake")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DateOfStake { get; set; }
+
         [Display(Name = "Lot name")]
         [Required]
         public int LotId { get; set; }

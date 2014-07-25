@@ -3,7 +3,7 @@ namespace Auction.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class Reinitilize : DbMigration
     {
         public override void Up()
         {
@@ -17,11 +17,8 @@ namespace Auction.Migrations
                         ImagePath = c.String(nullable: false),
                         HoursDuration = c.Int(nullable: false),
                         InitialStake = c.Int(nullable: false),
-                        ApplicationUser_Id = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.LotId)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
-                .Index(t => t.ApplicationUser_Id);
+                .PrimaryKey(t => t.LotId);
             
             CreateTable(
                 "dbo.Stakes",
@@ -30,12 +27,15 @@ namespace Auction.Migrations
                         StakeId = c.Int(nullable: false, identity: true),
                         HoursForAuctionEnd = c.Int(nullable: false),
                         CurrentStake = c.Int(nullable: false),
+                        DateOfStake = c.DateTime(nullable: false),
                         LotId = c.Int(nullable: false),
-                        ApplicationUserId = c.String(nullable: false),
+                        ApplicationUserId = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.StakeId)
                 .ForeignKey("dbo.Lots", t => t.LotId, cascadeDelete: true)
-                .Index(t => t.LotId);
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId, cascadeDelete: true)
+                .Index(t => t.LotId)
+                .Index(t => t.ApplicationUserId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -111,8 +111,8 @@ namespace Auction.Migrations
         
         public override void Down()
         {
+            DropForeignKey("dbo.Stakes", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Lots", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
@@ -123,8 +123,8 @@ namespace Auction.Migrations
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Stakes", new[] { "ApplicationUserId" });
             DropIndex("dbo.Stakes", new[] { "LotId" });
-            DropIndex("dbo.Lots", new[] { "ApplicationUser_Id" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");

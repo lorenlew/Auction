@@ -7,13 +7,13 @@ namespace Auction.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class Corrected_UserToStakeConnection : IMigrationMetadata
+    public sealed partial class Reinitilize : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Corrected_UserToStakeConnection));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Reinitilize));
         
         string IMigrationMetadata.Id
         {
-            get { return "201407231928322_Corrected_UserToStakeConnection"; }
+            get { return "201407241040409_Reinitilize"; }
         }
         
         string IMigrationMetadata.Source

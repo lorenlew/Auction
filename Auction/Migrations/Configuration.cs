@@ -30,10 +30,10 @@ namespace Auction.Migrations
                 roleManager.Create(new IdentityRole("Moderator"));
 
 
-            if (userManager.FindByName("admin@admin.net").Id == null)
+            if (userManager.FindByName("admin@admin.net") == null)
             {
                 var user = new ApplicationUser { UserName = "admin@admin.net", Email = "admin@admin.net", EmailConfirmed = true };
-                userManager.Create(user, "1q2w3e");
+                userManager.Create(user, "1q2w3eQ`");
 
                 userManager.AddToRole(user.Id, "Administrator");
             }

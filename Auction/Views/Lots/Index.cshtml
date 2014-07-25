@@ -1,13 +1,13 @@
-﻿@model IEnumerable<Auction.Models.DomainModels.Lot>
+﻿@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Stakes";
 }
 
-<h2>Index</h2>
+<h1>Stakes</h1>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", title = "Add" })
 </p>
 <table class="table">
     <tr>
@@ -26,32 +26,57 @@
         <th>
             @Html.DisplayNameFor(model => model.InitialStake)
         </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.LastDateOfStake)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HoursForAuctionEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastStake)
+        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImagePath)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HoursDuration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.InitialStake)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.LotId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.LotId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.LotId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoursDuration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialStake)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastDateOfStake)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoursForAuctionEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastStake)
+            </td>
+            <td>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning", title = "Edit" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger", title = "Delete" })
+                }
+                @Html.ActionLink("+5%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
+                @Html.ActionLink("+10%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
+                @Html.ActionLink("+20%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
+            </td>
+        </tr>
+    }
 
 </table>
