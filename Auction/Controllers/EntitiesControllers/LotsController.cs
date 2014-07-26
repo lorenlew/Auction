@@ -17,7 +17,6 @@ namespace Auction.Controllers.EntitiesControllers
 
         public LotsController( ApplicationDbContext context)
         {
-            if (context == null) throw new ArgumentNullException("context");
             db = context;
         }
 

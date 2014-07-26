@@ -19,7 +19,6 @@ namespace Auction.Controllers.EntitiesControllers
 
         public StakesController(ApplicationDbContext context)
         {
-            if (context == null) throw new ArgumentNullException("context");
             db = context;
         }
 

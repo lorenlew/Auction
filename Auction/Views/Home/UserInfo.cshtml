@@ -1,0 +1,30 @@
+﻿@model Auction.Models.ApplicationUser
+@{
+    ViewBag.Title = "User information";
+}
+<h1 class="well well-lg text-center font-bordered">
+    User information
+</h1>
+
+<div class="modal-content">
+    <div class="block-frame">
+        @Html.DisplayNameFor(model => model.FirstName) -
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+    <div class="block-frame">
+        @Html.DisplayNameFor(model => model.LastName) -
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+    <div class="block-frame">
+        @Html.DisplayNameFor(model => model.Email) -
+        @Html.DisplayFor(model => model.Email)
+    </div>
+    <div class="block-frame">
+        @Html.DisplayNameFor(model => model.PhoneNumber) -
+        @Html.DisplayFor(model => model.PhoneNumber)
+    </div>
+    <div class="block-frame">
+        @Html.DisplayNameFor(model => model.Id) -
+        @Html.DisplayFor(model => model.Id)
+    </div>
+</div>
