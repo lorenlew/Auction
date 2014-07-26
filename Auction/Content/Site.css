@@ -15,6 +15,7 @@ select,
 textarea {
     max-width: 280px;
 }
+
 footer {
     padding-top: 20px;
 }
@@ -48,4 +49,66 @@ div.block-frame:hover {
 .no-shadow {
     text-shadow: none;
     color: #000000;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin2 .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+    -moz-animation: spin2 .7s infinite linear;
+    -o-animation: spin2 .7s infinite linear;
+    animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spin2 {
+    from {
+        -moz-transform: scale(1) rotate(0deg);
+        -ms-transform: scale(1) rotate(0deg);
+        -o-transform: scale(1) rotate(0deg);
+        -webkit-transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0deg);
+    }
+
+    to {
+        -moz-transform: scale(1) rotate(360deg);
+        -ms-transform: scale(1) rotate(360deg);
+        -o-transform: scale(1) rotate(360deg);
+        -webkit-transform: scale(1) rotate(360deg);
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+@keyframes spin2 {
+    from {
+        -moz-transform: scale(1) rotate(0deg);
+        -ms-transform: scale(1) rotate(0deg);
+        -o-transform: scale(1) rotate(0deg);
+        -webkit-transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0deg);
+    }
+
+    to {
+        -moz-transform: scale(1) rotate(360deg);
+        -ms-transform: scale(1) rotate(360deg);
+        -o-transform: scale(1) rotate(360deg);
+        -webkit-transform: scale(1) rotate(360deg);
+        transform: scale(1) rotate(360deg);
+    }
 }

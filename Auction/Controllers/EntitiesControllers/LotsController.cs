@@ -21,10 +21,14 @@ namespace Auction.Controllers.EntitiesControllers
         }
 
         // GET: Lots
-        public ActionResult Index()
+        public ActionResult Index(bool? isAjax)
         {
-
+            bool isAjaxRequest = isAjax.GetValueOrDefault();
             var lotsWithStakes = ApplicationDbContext.GetLotsAndStakesViewModel();
+            if (isAjaxRequest)
+            {
+                return PartialView("_lotsAndStakes", lotsWithStakes);
+            }
             return View(lotsWithStakes);
         }
 

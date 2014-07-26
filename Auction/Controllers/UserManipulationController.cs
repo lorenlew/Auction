@@ -38,7 +38,7 @@ namespace Auction.Controllers
             return View(users);
         }
 
-        public async Task SendNotificationsAsync()
+        private async Task SendNotificationsAsync()
         {
             await SendInfoToWinners();
         }

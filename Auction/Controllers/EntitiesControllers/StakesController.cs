@@ -71,25 +71,9 @@ namespace Auction.Controllers.EntitiesControllers
             }
             db.Stakes.Add(currentStake);
             db.SaveChanges();
-            return RedirectToAction("Index", "Lots");
+            return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
         }
 
-        // POST: Stakes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StakeId,HoursForAuctionEnd,CurrentStake,DateOfStake,LotId,ApplicationUserId")] Stake stake)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Stakes.Add(stake);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(stake);
-        }
 
         // GET: Stakes/Edit/5
         public ActionResult Edit(int? id)
