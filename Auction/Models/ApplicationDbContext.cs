@@ -6,6 +6,7 @@ using System.Web;
 using Auction.Models.DomainModels;
 using Auction.Models.ViewModels;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject.Infrastructure.Language;
 
 namespace Auction.Models
 {
@@ -26,13 +27,13 @@ namespace Auction.Models
         }
 
 
-        public static IEnumerable<LotViewModel> GetLotsWithStakesViewModel()
+        public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel()
         {
             ApplicationDbContext db = Create();
 
-            var lotWithStakes = (from lot in db.Lots
-                                 join stake in db.Stakes on lot.LotId equals stake.LotId into jlotStake
-                                 from lotStake in jlotStake.DefaultIfEmpty()
+            var lotsAndStakes = (from lot in db.Lots
+                                 join stake in db.Stakes on lot.LotId equals stake.LotId into joinedLotsAndStakes
+                                 from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
                                  select new LotViewModel()
                                  {
                                      LotId = lot.LotId,
@@ -41,27 +42,15 @@ namespace Auction.Models
                                      ImagePath = lot.ImagePath,
                                      HoursDuration = lot.HoursDuration,
                                      InitialStake = lot.InitialStake,
-                                     LastDateOfStake = lotStake.DateOfStake,
-                                     HoursForAuctionEnd = lotStake.HoursForAuctionEnd,
-                                     LastStake = lotStake.CurrentStake
+                                     LastDateOfStake = jLotsAndStakes.DateOfStake,
+                                     StakeTimeout = jLotsAndStakes.StakeTimeout,
+                                     LastStake = jLotsAndStakes.CurrentStake
                                  });
 
-            var groupedLotStakes = (from groupedLots in lotWithStakes
-                                    group groupedLots by new { groupedLots.LotId } into g
-                                    let firstOrDefault = g.FirstOrDefault()
-                                    where firstOrDefault != null
-                                    select new LotViewModel() 
-                                  { 
-                                      LotId = g.Key.LotId,
-                                      Name = firstOrDefault.Name,
-                                      Description = firstOrDefault.Description,
-                                      ImagePath = firstOrDefault.ImagePath,
-                                      HoursDuration = firstOrDefault.HoursDuration,
-                                      InitialStake = firstOrDefault.InitialStake,
-                                      LastDateOfStake = firstOrDefault.LastDateOfStake,
-                                      HoursForAuctionEnd = firstOrDefault.HoursForAuctionEnd,
-                                      LastStake = firstOrDefault.LastStake
-                                  }).ToList();
+            var groupedLotStakes = (from lots in lotsAndStakes
+                                    group lots by new { lots.LotId } into grp
+                                    let firstOrDefault = grp.OrderByDescending(p => p.LastDateOfStake).FirstOrDefault()
+                                    select firstOrDefault).ToList();
             return groupedLotStakes;
         }
     }

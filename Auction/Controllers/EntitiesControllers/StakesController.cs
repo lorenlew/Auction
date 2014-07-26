@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using Auction.Models;
 using Auction.Models.DomainModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Auction.Controllers.EntitiesControllers
 {
@@ -17,6 +19,7 @@ namespace Auction.Controllers.EntitiesControllers
 
         public StakesController(ApplicationDbContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
             db = context;
         }
 
@@ -40,11 +43,43 @@ namespace Auction.Controllers.EntitiesControllers
             }
             return View(stake);
         }
+        private string GetUserId(string name)
+        {
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var targetUser = userManager.FindByName(name);
+            var targetUserId = targetUser.Id;
+            return targetUserId;
+        }
 
         // GET: Stakes/Create
-        public ActionResult Create()
+        public ActionResult Create(int id, double? stakeIncrease)
         {
-            return View();
+            stakeIncrease = stakeIncrease ?? 1.05;
+
+            var currentLot = (from lots in ApplicationDbContext.GetLotsAndStakesViewModel()
+                              where lots.LotId == id
+                              select lots).Single();
+
+            var currentStake = new Stake
+            {
+                LotId = id,
+                ApplicationUserId = GetUserId(User.Identity.Name),
+                DateOfStake = DateTime.Now
+            };
+
+            if (currentLot.LastStake == null)
+            {
+                currentStake.StakeTimeout = DateTime.Now.AddHours(currentLot.HoursDuration);
+                currentStake.CurrentStake = currentLot.InitialStake;
+            }
+            else
+            {
+                currentStake.StakeTimeout = currentLot.StakeTimeout.GetValueOrDefault().AddMinutes(1);
+                currentStake.CurrentStake = (int) (currentLot.LastStake * stakeIncrease);
+            }
+            db.Stakes.Add(currentStake);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Lots");
         }
 
         // POST: Stakes/Create

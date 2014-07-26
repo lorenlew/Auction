@@ -25,7 +25,7 @@ namespace Auction.Controllers.EntitiesControllers
         public ActionResult Index()
         {
 
-            var lotsWithStakes = ApplicationDbContext.GetLotsWithStakesViewModel();
+            var lotsWithStakes = ApplicationDbContext.GetLotsAndStakesViewModel();
             return View(lotsWithStakes);
         }
 

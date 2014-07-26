@@ -183,6 +183,10 @@
     <Compile Include="Migrations\201407241040409_Reinitilize.Designer.cs">
       <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407250940201_fixStakeTimeout.cs" />
+    <Compile Include="Migrations\201407250940201_fixStakeTimeout.Designer.cs">
+      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -266,6 +270,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201407241040409_Reinitilize.resx">
       <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407250940201_fixStakeTimeout.resx">
+      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

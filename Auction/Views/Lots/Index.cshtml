@@ -1,15 +1,18 @@
-﻿@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
+﻿@using Auction.Controllers
+@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
 
 @{
     ViewBag.Title = "Stakes";
 }
 
 <h1>Stakes</h1>
-
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", title = "Add" })
-</p>
-<table class="table">
+@if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", title = "Add" })
+    </p>
+}
+<table class="table table-striped table-hover table-responsive table-condensed table-bordered tab-content">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -31,12 +34,15 @@
             @Html.DisplayNameFor(model => model.LastDateOfStake)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.HoursForAuctionEnd)
+            @Html.DisplayNameFor(model => model.StakeTimeout)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.LastStake)
         </th>
-        <th></th>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <th></th>
+        }
     </tr>
 
     @foreach (var item in Model)
@@ -61,21 +67,33 @@
                 @Html.DisplayFor(modelItem => item.LastDateOfStake)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HoursForAuctionEnd)
+                @Html.DisplayFor(modelItem => item.StakeTimeout)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LastStake)
             </td>
-            <td>
-                @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
-                {
-                    @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning", title = "Edit" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger", title = "Delete" })
-                }
-                @Html.ActionLink("+5%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
-                @Html.ActionLink("+10%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
-                @Html.ActionLink("+20%", "Delete", new { id = item.LotId }, new { @class = "btn btn-primary", title = "Add" })
-            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning", title = "Edit" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger", title = "Delete" })
+                    }
+                    @if (item.LastStake == null)
+                    {
+                        @Html.ActionLink("+", "Create", "Stakes", new { id = item.LotId}, new { @class = "btn btn-default", title = "New stake" })
+                    }
+                    else
+                    {
+                        <div class="block-frame">
+                            @Html.ActionLink("+5%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.05 }, new { @class = "btn btn-default", title = "New stake" })
+                            @Html.ActionLink("+10%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.1 }, new { @class = "btn btn-default", title = "New stake" })
+                            @Html.ActionLink("+20%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.2 }, new { @class = "btn btn-default", title = "New stake" })
+                        </div>
+                    }
+                </td>
+            }
         </tr>
     }
 

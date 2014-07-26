@@ -36,8 +36,9 @@ namespace Auction.Models.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? LastDateOfStake { get; set; }
 
-        [Display(Name = "Time for auction's end")]
-        public int? HoursForAuctionEnd { get; set; }
+        [Display(Name = "Stake timeout")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? StakeTimeout { get; set; }
 
         [Display(Name = "Last stake")]
         public int? LastStake { get; set; }

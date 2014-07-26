@@ -10,15 +10,16 @@ namespace Auction.Models.DomainModels
     {
         public int StakeId { get; set; }
 
-        [Display(Name = "Time for auction's end")]
-        public int HoursForAuctionEnd { get; set; }
-
         [Display(Name = "Current stake")]
         public int CurrentStake { get; set; }
 
         [Display(Name = "Date of stake")]
         [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfStake { get; set; }
+
+        [Display(Name = "Stake timeout")]
+        [DisplayFormat(DataFormatString = "{0:dd'.'MM'.'yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StakeTimeout { get; set; }
 
         [Display(Name = "Lot name")]
         [Required]
