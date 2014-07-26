@@ -32,7 +32,13 @@ namespace Auction.Migrations
 
             if (userManager.FindByName("admin@admin.net") == null)
             {
-                var user = new ApplicationUser { UserName = "admin@admin.net", Email = "admin@admin.net", EmailConfirmed = true };
+                var user = new ApplicationUser
+                {
+                    UserName = "admin@admin.net", 
+                    Email = "admin@admin.net", 
+                    EmailConfirmed = true, 
+                    IsBanned = false
+                };
                 userManager.Create(user, "1q2w3eQ`");
 
                 userManager.AddToRole(user.Id, "Administrator");

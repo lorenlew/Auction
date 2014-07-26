@@ -20,6 +20,8 @@ namespace Auction.Models
         [Display(Name = "Last name")]
         public string LastName { get; set; }
 
+        public bool IsBanned { get; set; }
+
         public virtual ICollection<Stake> Stakes { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

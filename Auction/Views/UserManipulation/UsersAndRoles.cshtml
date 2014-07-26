@@ -1,0 +1,12 @@
+﻿
+@model IEnumerable<Auction.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Admin section";
+}
+<br />
+<h1 class ="text-center well well-lg">Admin section</h1>
+
+<br />
+<div id="UsersAndRoles">
+    @Html.Partial("_UserManipulation", Model)
+</div>  

@@ -1,43 +1,51 @@
 ﻿body {
-	padding-top: 50px;
-	padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-	padding-left: 15px;
-	padding-right: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-	max-width: 280px;
+    max-width: 280px;
+}
+footer {
+    padding-top: 20px;
 }
 
 .block-frame {
-	display: block;
+    display: block;
 }
 
 ul.block-frame > li {
-	display: inline-block;
+    display: inline-block;
 }
 
 div.block-frame:hover {
-	border: 1px solid lightblue;
-	background-color: lightsteelblue;
-	cursor: default;
+    border: 1px solid lightblue;
+    background-color: lightsteelblue;
+    cursor: default;
 }
 
 .modal-content div {
-	padding-top: 20px;
-	padding-bottom: 20px;
-	padding-left: 80px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 80px;
 }
 
 .font-bordered {
-	color: #ffffff;
-	-ms-text-shadow: #000 2px 0px 2px, #000 0px 2px 2px, #000 0px -2px 2px, #000 -2px 0px 2px;
-	text-shadow: #000 2px 0px 2px, #000 0px 2px 2px, #000 0px -2px 2px, #000 -2px 0px 2px;
+    color: #ffffff;
+    -ms-text-shadow: #000 2px 0px 2px, #000 0px 2px 2px, #000 0px -2px 2px, #000 -2px 0px 2px;
+    text-shadow: #000 2px 0px 2px, #000 0px 2px 2px, #000 0px -2px 2px, #000 -2px 0px 2px;
+}
+
+.no-shadow {
+    text-shadow: none;
+    color: #000000;
 }

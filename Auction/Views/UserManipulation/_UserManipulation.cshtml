@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<Auction.Models.ApplicationUser>
+<h1 class="text-center">
+    @if (User.IsInRole("Administrator"))
+    {
+        @:Current role - Administrator
+}
+    else
+    {
+        @:Current role - Moderator
+}
+</h1>
+<br /><br />
+<table class="table  table-bordered tab-content table-hover table-responsive table-condensed table-striped">
+    <tr>
+        <th width="30%">User name</th>
+        <th>State</th>
+        @if (User.IsInRole("Administrator"))
+        {
+            <th>Action</th>
+        }
+        <th>Role</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tbody class="no-shadow">
+            <tr>
+                @if (item.UserName != User.Identity.Name)
+                {
+                    <td width="30%">
+                        @item.UserName
+
+                    </td>
+                    <td>
+                        @*банить можно только, если ты администратор, либо если ты модератор и цель не администратор и модератор*@
+                        @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator")
+                            && !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator")
+                            || User.IsInRole("Administrator"))
+                        {
+
+                            if (!item.IsBanned)
+                            {
+                                @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                {
+                                    UpdateTargetId = "UsersAndRoles",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "Post",
+                                }, new { @class = "btn btn-success" })
+                            }
+                            else
+                            {
+                                @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                {
+                                    UpdateTargetId = "UsersAndRoles",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "Post",
+                                }, new { @class = "btn btn-default" })
+                            }
+
+                        }
+                    </td>
+
+                    if (User.IsInRole("Administrator"))
+                    {
+                        <td>
+                            @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
+                            {
+                                @Ajax.ActionLink("To moderator", "SetToRole", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                {
+                                    UpdateTargetId = "UsersAndRoles",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "Post",
+                                }, new { @class = "btn btn-default" })
+                            }
+                            else
+                            {
+                                @Ajax.ActionLink("To user", "SetToRole", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                {
+                                    UpdateTargetId = "UsersAndRoles",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "Post",
+                                }, new { @class = "btn btn-success" })
+                            }
+                        </td>
+                    }
+                    <td>
+                        <div style="color: yellowgreen;">
+                            @foreach (var role in (UserManagerExtensions.GetRoles(ViewBag.userManager, item.Id)))
+                            {
+                                @role
+                            }
+                            @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator") &&
+                                 !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
+                            {
+                                @:User
+                            }
+                        </div>
+                    </td>
+                }
+            </tr>
+        </tbody>
+    }
+</table>

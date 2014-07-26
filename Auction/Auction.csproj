@@ -176,6 +176,7 @@
     <Compile Include="Controllers\EntitiesControllers\LotsController.cs" />
     <Compile Include="Controllers\EntitiesControllers\StakesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserManipulationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -186,6 +187,10 @@
     <Compile Include="Migrations\201407250940201_fixStakeTimeout.cs" />
     <Compile Include="Migrations\201407250940201_fixStakeTimeout.Designer.cs">
       <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407261519186_isBanned.cs" />
+    <Compile Include="Migrations\201407261519186_isBanned.Designer.cs">
+      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -211,6 +216,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -258,6 +265,9 @@
     <Content Include="Views\Stakes\Edit.cshtml" />
     <Content Include="Views\Stakes\Index.cshtml" />
     <Content Include="Views\Home\UserInfo.cshtml" />
+    <Content Include="Views\Account\CheckEmail.cshtml" />
+    <Content Include="Views\UserManipulation\UsersAndRoles.cshtml" />
+    <Content Include="Views\UserManipulation\_UserManipulation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -276,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407250940201_fixStakeTimeout.resx">
       <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407261519186_isBanned.resx">
+      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

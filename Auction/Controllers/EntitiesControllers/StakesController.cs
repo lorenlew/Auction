@@ -42,13 +42,6 @@ namespace Auction.Controllers.EntitiesControllers
             }
             return View(stake);
         }
-        private string GetUserId(string name)
-        {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            var targetUser = userManager.FindByName(name);
-            var targetUserId = targetUser.Id;
-            return targetUserId;
-        }
 
         // GET: Stakes/Create
         public ActionResult Create(int id, double? stakeIncrease)
@@ -62,7 +55,7 @@ namespace Auction.Controllers.EntitiesControllers
             var currentStake = new Stake
             {
                 LotId = id,
-                ApplicationUserId = GetUserId(User.Identity.Name),
+                ApplicationUserId = User.Identity.GetUserId(),
                 DateOfStake = DateTime.Now
             };
 
@@ -74,7 +67,7 @@ namespace Auction.Controllers.EntitiesControllers
             else
             {
                 currentStake.StakeTimeout = currentLot.StakeTimeout.GetValueOrDefault().AddMinutes(1);
-                currentStake.CurrentStake = (int) (currentLot.LastStake * stakeIncrease);
+                currentStake.CurrentStake = (int)(currentLot.LastStake * stakeIncrease);
             }
             db.Stakes.Add(currentStake);
             db.SaveChanges();
