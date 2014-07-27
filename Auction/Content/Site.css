@@ -124,6 +124,90 @@ div.block-frame:hover {
         opacity: 0.9;
     }
 
-.table th,td {
+.table th, td {
     text-align: center;
+}
+
+@-moz-keyframes blink {
+    25% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    75% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes blink {
+    25% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    75% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    25% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    75% {
+        opacity: 0.9;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+.blink {
+    -webkit-animation: blink 5s ease-in-out infinite;
+    -moz-animation: blink 5s ease-in-out infinite;
+    -o-animation: blink 5s ease-in-out infinite;
+    -ms-animation: blink 5s ease-in-out infinite;
+    animation: blink 5s ease-in-out infinite;
+}
+
+
+.img-main {
+    -moz-border-radius-topleft: 29px;
+    -webkit-border-top-left-radius: 29px;
+    border-top-left-radius: 29px;
+    -moz-border-radius-topright: 57px;
+    -webkit-border-top-right-radius: 100px;
+    border-top-right-radius: 100px;
+    -moz-border-radius-bottomright: 29px;
+    -webkit-border-bottom-right-radius: 29px;
+    border-bottom-right-radius: 29px;
+    -moz-border-radius-bottomleft: 57px;
+    -webkit-border-bottom-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    -webkit-box-shadow: 0px 0px 177px 50px #ffffff;
+    -moz-box-shadow: 0px 0px 177px 50px #ffffff;
+    box-shadow: 0px 0px 177px 50px #ffffff;
+    box-shadow: 0px 0px 177px 50px rgba(255, 255, 255, 0.40);
 }
