@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-weight: 600;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -11,9 +12,15 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-textarea {
+select {
     max-width: 280px;
+}
+
+textarea {
+    min-width: 500px;
+    max-width: 800px;
+    min-height: 100px;
+    max-height: 180px;
 }
 
 footer {
@@ -24,8 +31,12 @@ footer {
     display: block;
 }
 
-ul.block-frame > li {
-    display: inline-block;
+.inline {
+    display: inline;
+}
+
+ul {
+    list-style: none;
 }
 
 div.block-frame:hover {
@@ -51,68 +62,6 @@ div.block-frame:hover {
     color: #000000;
 }
 
-.glyphicon-refresh-animate {
-    -animation: spin2 .7s infinite linear;
-    -webkit-animation: spin2 .7s infinite linear;
-    -moz-animation: spin2 .7s infinite linear;
-    -o-animation: spin2 .7s infinite linear;
-    animation: spin2 .7s infinite linear;
-}
-
-@-webkit-keyframes spin2 {
-    from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-
-    to {
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-@-moz-keyframes spin2 {
-    from {
-        -moz-transform: scale(1) rotate(0deg);
-        -ms-transform: scale(1) rotate(0deg);
-        -o-transform: scale(1) rotate(0deg);
-        -webkit-transform: scale(1) rotate(0deg);
-        transform: scale(1) rotate(0deg);
-    }
-
-    to {
-        -moz-transform: scale(1) rotate(360deg);
-        -ms-transform: scale(1) rotate(360deg);
-        -o-transform: scale(1) rotate(360deg);
-        -webkit-transform: scale(1) rotate(360deg);
-        transform: scale(1) rotate(360deg);
-    }
-}
-
-@keyframes spin2 {
-    from {
-        -moz-transform: scale(1) rotate(0deg);
-        -ms-transform: scale(1) rotate(0deg);
-        -o-transform: scale(1) rotate(0deg);
-        -webkit-transform: scale(1) rotate(0deg);
-        transform: scale(1) rotate(0deg);
-    }
-
-    to {
-        -moz-transform: scale(1) rotate(360deg);
-        -ms-transform: scale(1) rotate(360deg);
-        -o-transform: scale(1) rotate(360deg);
-        -webkit-transform: scale(1) rotate(360deg);
-        transform: scale(1) rotate(360deg);
-    }
-}
-
 .img-content {
     height: 150px;
     border-radius: 20%;
@@ -126,6 +75,7 @@ div.block-frame:hover {
 
 .table th, td {
     text-align: center;
+    vertical-align: middle !important;
 }
 
 @-moz-keyframes blink {
@@ -211,10 +161,12 @@ div.block-frame:hover {
     box-shadow: 0px 0px 177px 50px #ffffff;
     box-shadow: 0px 0px 177px 50px rgba(255, 255, 255, 0.40);
 }
+
 .fixed-cell {
     width: 200px;
 }
+
 .info-cell {
     background-color: #98fb98;
-    background-color: rgba(152, 251, 152, 0.2)
+    background-color: rgba(152, 251, 152, 0.2);
 }

@@ -292,6 +292,7 @@ table {
 
     .table td,
     .table th {
+        vertical-align: middle;
         background-color: #fff !important;
     }
 
@@ -363,7 +364,6 @@ a {
     a:hover,
     a:focus {
         color: #2a6496;
-        text-decoration: underline;
     }
 
     a:focus {
@@ -2588,7 +2588,8 @@ input[type="button"].btn-block {
     font-weight: normal;
     line-height: 1;
 }
-a.glyphicon:hover{
+
+a.glyphicon:hover {
     text-decoration: none;
 }
 
@@ -4719,6 +4720,10 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
     .navbar-inverse .navbar-nav > li > a {
         color: #999999;
+        -moz-transition: 0.3s all linear;
+        -o-transition: 0.3s all linear;
+        -webkit-transition: 0.3s all linear;
+        transition: 0.3s all linear;
     }
 
         .navbar-inverse .navbar-nav > li > a:hover,
@@ -5864,8 +5869,10 @@ button.close {
     outline: none;
     -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
     box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    -moz-background-clip: padding-box;
+    -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    min-width: 714px;
+    min-width: 1138px;
 }
 
 .modal-backdrop {

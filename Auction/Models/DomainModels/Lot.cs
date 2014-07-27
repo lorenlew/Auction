@@ -40,6 +40,7 @@ namespace Auction.Models.DomainModels
         [Required(ErrorMessage = "Enter initial stake")]
         public int InitialStake { get; set; }
 
+        public bool IsSold { get; set; }
         public virtual ICollection<Stake> Stakes { get; set; }
 
     }

@@ -37,7 +37,6 @@ namespace Auction.Migrations
                     UserName = "admin@admin.net", 
                     Email = "admin@admin.net", 
                     EmailConfirmed = true, 
-                    IsBanned = false
                 };
                 userManager.Create(user, "1q2w3eQ`");
 

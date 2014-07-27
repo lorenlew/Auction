@@ -28,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.LastStake)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
             @if (User.Identity.IsAuthenticated)
             {
                 <th></th>
@@ -42,7 +45,7 @@
                 </td>
                 <td class="info-cell">
                     @Html.DisplayFor(modelItem => item.Description)
-                </td>  
+                </td>
                 <td class="info-cell">
                     <img class="img-content" src=@item.ImagePath />
                 </td>
@@ -61,16 +64,25 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.LastStake)
                 </td>
-                @if (User.Identity.IsAuthenticated)
+                <td>
+                    @if (item.IsAvailable)
+                    {
+                        <span class="btn btn-success fa fa-unlock"></span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-danger fa fa-lock"></span>
+                    }
+                </td>
+                @if (User.Identity.IsAuthenticated && item.IsAvailable)
                 {
                     <td>
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                         {
-                            @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning", title = "Edit" })
-                            @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger", title = "Delete" })
+                            @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
+                            @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger block-frame", title = "Delete" })
                         }
-                        <span id="loading_@item.LotId" class="glyphicon glyphicon-refresh glyphicon-refresh-animate" style="display: none"></span>
-                        <ul class="block-frame">
+                        <ul>
                             @if (item.LastStake == null)
                             {
                                 <li>
@@ -81,7 +93,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to a make stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default" })
+                                    }, new { @class = "btn btn-default block-frame" })
                                 </li>
                             }
                             else
@@ -94,7 +106,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default" })
+                                    }, new { @class = "btn btn-default block-frame" })
                                 </li>
                                 <li>
                                     @Ajax.ActionLink("+10%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.1 }, new AjaxOptions
@@ -104,7 +116,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default" })
+                                    }, new { @class = "btn btn-default block-frame" })
                                 </li>
                                 <li>
                                     @Ajax.ActionLink("+20%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.2 }, new AjaxOptions
@@ -114,8 +126,9 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default" })
+                                    }, new { @class = "btn btn-default block-frame" })
                                 </li>
+                                <li id="loading_@item.LotId" class="fa fa-spinner fa-spin" style="display: none"></li>
                             }
                         </ul>
                     </td>

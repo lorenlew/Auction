@@ -36,5 +36,8 @@ namespace Auction.Models.ViewModels
 
         [Display(Name = "Last stake")]
         public int? LastStake { get; set; }
+
+        [Display(Name = "Is available")]
+        public bool IsAvailable { get; set; }
     }
 }

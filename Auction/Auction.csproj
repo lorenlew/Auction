@@ -206,6 +206,10 @@
     <Compile Include="Migrations\201407271136317_UniqueLotName.Designer.cs">
       <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407272032070_isSold.cs" />
+    <Compile Include="Migrations\201407272032070_isSold.Designer.cs">
+      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -219,14 +223,21 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Images\Background-images\Elegant_Background-6.jpg" />
     <Content Include="Content\Images\Background-images\Main.jpg" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -271,19 +282,14 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Lots\Create.cshtml" />
     <Content Include="Views\Lots\Delete.cshtml" />
-    <Content Include="Views\Lots\Details.cshtml" />
     <Content Include="Views\Lots\Edit.cshtml" />
     <Content Include="Views\Lots\Index.cshtml" />
-    <Content Include="Views\Stakes\Create.cshtml" />
-    <Content Include="Views\Stakes\Delete.cshtml" />
-    <Content Include="Views\Stakes\Details.cshtml" />
-    <Content Include="Views\Stakes\Edit.cshtml" />
-    <Content Include="Views\Stakes\Index.cshtml" />
     <Content Include="Views\Home\UserInfo.cshtml" />
     <Content Include="Views\Account\CheckEmail.cshtml" />
     <Content Include="Views\UserManipulation\UsersAndRoles.cshtml" />
     <Content Include="Views\UserManipulation\_UserManipulation.cshtml" />
     <Content Include="Views\Lots\_lotsAndStakes.cshtml" />
+    <Content Include="Views\Stakes\LotIsSold.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -314,6 +320,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407271136317_UniqueLotName.resx">
       <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407272032070_isSold.resx">
+      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
