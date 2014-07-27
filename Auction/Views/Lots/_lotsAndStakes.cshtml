@@ -37,19 +37,19 @@
         @foreach (var item in Model)
         {
             <tr class="no-shadow">
-                <td>
+                <td class="info-cell">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td>
+                <td class="info-cell">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>  
-                <td>
+                <td class="info-cell">
                     <img class="img-content" src=@item.ImagePath />
                 </td>
-                <td>
+                <td class="info-cell">
                     @Html.DisplayFor(modelItem => item.HoursDuration)
                 </td>
-                <td>
+                <td class="info-cell">
                     @Html.DisplayFor(modelItem => item.InitialStake)
                 </td>
                 <td>

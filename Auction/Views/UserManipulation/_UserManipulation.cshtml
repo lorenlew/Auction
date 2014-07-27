@@ -3,17 +3,17 @@
 <h1 class="text-center">
     @if (User.IsInRole("Administrator"))
     {
-        @:Current role - Administrator
+        @:Current role - <span class="text-danger">Administrator</span>
 }
     else
     {
-        @:Current role - Moderator
+        @:Current role -<span class ="text-danger"> Moderator</span>
 }
 </h1>
 <br /><br />
 <table class="table  table-bordered tab-content table-hover table-responsive table-condensed table-striped">
     <tr>
-        <th width="30%">User name</th>
+        <th>User name</th>
         <th>State</th>
         @if (User.IsInRole("Administrator"))
         {
@@ -27,42 +27,42 @@
             <tr>
                 @if (item.UserName != User.Identity.Name)
                 {
-                    <td width="30%">
+                    <td class="fixed-cell">
                         @item.UserName
 
                     </td>
-                    <td>
-                        @*банить можно только, если ты администратор, либо если ты модератор и цель не администратор и модератор*@
-                        @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator")
+    <td class="fixed-cell">
+        @*банить можно только, если ты администратор, либо если ты модератор и цель не администратор и модератор*@
+        @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator")
                             && !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator")
                             || User.IsInRole("Administrator"))
-                        {
+        {
 
-                            if (!item.IsBanned)
-                            {
-                                @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+            if (!item.IsBanned)
+            {
+                @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
                                 }, new { @class = "btn btn-success" })
-                            }
-                            else
-                            {
-                                @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+            }
+            else
+            {
+                @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
                                 }, new { @class = "btn btn-default" })
-                            }
+            }
 
-                        }
-                    </td>
+        }
+    </td>
 
                     if (User.IsInRole("Administrator"))
                     {
-                        <td>
+                        <td class="fixed-cell">
                             @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
                             {
                                 @Ajax.ActionLink("To moderator", "SetToRole", "UserManipulation", new { name = item.UserName }, new AjaxOptions
@@ -83,8 +83,8 @@
                             }
                         </td>
                     }
-                    <td>
-                        <div style="color: yellowgreen;">
+                    <td class="fixed-cell">
+                        <div class="text-success">
                             @foreach (var role in (UserManagerExtensions.GetRoles(ViewBag.userManager, item.Id)))
                             {
                                 @role

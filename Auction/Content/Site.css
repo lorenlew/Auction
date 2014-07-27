@@ -211,3 +211,10 @@ div.block-frame:hover {
     box-shadow: 0px 0px 177px 50px #ffffff;
     box-shadow: 0px 0px 177px 50px rgba(255, 255, 255, 0.40);
 }
+.fixed-cell {
+    width: 200px;
+}
+.info-cell {
+    background-color: #98fb98;
+    background-color: rgba(152, 251, 152, 0.2)
+}

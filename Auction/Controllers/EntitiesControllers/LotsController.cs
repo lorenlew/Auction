@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,7 +18,7 @@ namespace Auction.Controllers.EntitiesControllers
     {
         private ApplicationDbContext db;
 
-        public LotsController( ApplicationDbContext context)
+        public LotsController(ApplicationDbContext context)
         {
             db = context;
         }
@@ -66,14 +68,36 @@ namespace Auction.Controllers.EntitiesControllers
                 string fileName = Guid.NewGuid() + "." + Path.GetExtension((lot.Image.FileName)).Substring(1);
                 string virtualPath = "/Content/Images/LotImages/" + fileName;
                 string physicalPath = HttpContext.Server.MapPath(virtualPath);
-
-                lot.Image.SaveAs(physicalPath);
                 lot.ImagePath = virtualPath;
-                db.Lots.Add(lot);
-                db.SaveChanges();
+                try
+                {
+                    db.Lots.Add(lot);
+                    db.SaveChanges();
+                    lot.Image.SaveAs(physicalPath);
+
+                }
+                catch (DbUpdateException e)
+                {
+                    SqlException innerException = null;
+                    Exception tmp = e;
+                    while (innerException == null && tmp != null)
+                    {
+                        if (tmp != null)
+                        {
+                            innerException = tmp.InnerException as SqlException;
+                            tmp = tmp.InnerException;
+                        }
+
+                    }
+                    if (innerException != null && innerException.Number == 2601)
+                    {
+                        ModelState.AddModelError("", "Name " + lot.Name + " is already taken.");
+                        return View(lot);
+                    }
+                    throw;
+                }
                 return RedirectToAction("Index");
             }
-
             return View(lot);
         }
 
