@@ -42,9 +42,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
-                </td>
+                </td>  
                 <td>
-                    @Html.DisplayFor(modelItem => item.ImagePath)
+                    <img class="img-content" src=@item.ImagePath />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.HoursDuration)

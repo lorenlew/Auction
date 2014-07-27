@@ -333,6 +333,10 @@ body {
     line-height: 1.428571429;
     color: #333333;
     background: url(Images/Background-images/Elegant_Background-6.jpg) no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 input,
@@ -2584,6 +2588,9 @@ input[type="button"].btn-block {
     font-weight: normal;
     line-height: 1;
 }
+a.glyphicon:hover{
+    text-decoration: none;
+}
 
 .glyphicon-asterisk:before {
     content: "\2a";
@@ -4716,14 +4723,14 @@ textarea.input-group-sm > .input-group-btn > .btn {
 
         .navbar-inverse .navbar-nav > li > a:hover,
         .navbar-inverse .navbar-nav > li > a:focus {
-            color: #ffffff;
+            color: rgb(100, 222, 253);
             background-color: transparent;
         }
 
     .navbar-inverse .navbar-nav > .active > a,
     .navbar-inverse .navbar-nav > .active > a:hover,
     .navbar-inverse .navbar-nav > .active > a:focus {
-        color: #ffffff;
+        color: rgb(100, 222, 253);
         background-color: #080808;
     }
 

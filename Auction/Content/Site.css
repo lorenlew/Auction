@@ -112,3 +112,18 @@ div.block-frame:hover {
         transform: scale(1) rotate(360deg);
     }
 }
+
+.img-content {
+    height: 150px;
+    border-radius: 20%;
+    display: block;
+    margin: 0 auto;
+}
+
+    .img-content:hover {
+        opacity: 0.9;
+    }
+
+.table th,td {
+    text-align: center;
+}

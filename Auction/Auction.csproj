@@ -172,6 +172,8 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Attributes\FileSizeAttribute.cs" />
+    <Compile Include="Attributes\FileTypesAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EntitiesControllers\LotsController.cs" />
     <Compile Include="Controllers\EntitiesControllers\StakesController.cs" />
@@ -191,6 +193,18 @@
     <Compile Include="Migrations\201407261519186_isBanned.cs" />
     <Compile Include="Migrations\201407261519186_isBanned.Designer.cs">
       <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407270809292_ImageFile.cs" />
+    <Compile Include="Migrations\201407270809292_ImageFile.Designer.cs">
+      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407271028417_ImagePathBack.cs" />
+    <Compile Include="Migrations\201407271028417_ImagePathBack.Designer.cs">
+      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407271136317_UniqueLotName.cs" />
+    <Compile Include="Migrations\201407271136317_UniqueLotName.Designer.cs">
+      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -290,6 +304,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407261519186_isBanned.resx">
       <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407270809292_ImageFile.resx">
+      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407271028417_ImagePathBack.resx">
+      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407271136317_UniqueLotName.resx">
+      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

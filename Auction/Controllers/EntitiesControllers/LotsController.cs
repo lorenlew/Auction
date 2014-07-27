@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -58,10 +59,16 @@ namespace Auction.Controllers.EntitiesControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "LotId,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
+        public ActionResult Create([Bind(Include = "LotId,Name,Description,Image,HoursDuration,InitialStake")] Lot lot)
         {
             if (ModelState.IsValid)
             {
+                string fileName = Guid.NewGuid() + "." + Path.GetExtension((lot.Image.FileName)).Substring(1);
+                string virtualPath = "/Content/Images/LotImages/" + fileName;
+                string physicalPath = HttpContext.Server.MapPath(virtualPath);
+
+                lot.Image.SaveAs(physicalPath);
+                lot.ImagePath = virtualPath;
                 db.Lots.Add(lot);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -90,7 +97,7 @@ namespace Auction.Controllers.EntitiesControllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "LotId,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
+        public ActionResult Edit([Bind(Include = "LotId,Name,Description,Image,HoursDuration,InitialStake")] Lot lot)
         {
             if (ModelState.IsValid)
             {
@@ -122,6 +129,8 @@ namespace Auction.Controllers.EntitiesControllers
         public ActionResult DeleteConfirmed(int id)
         {
             Lot lot = db.Lots.Find(id);
+            string physicalPath = HttpContext.Server.MapPath(lot.ImagePath);
+            System.IO.File.Delete(physicalPath);
             db.Lots.Remove(lot);
             db.SaveChanges();
             return RedirectToAction("Index");
