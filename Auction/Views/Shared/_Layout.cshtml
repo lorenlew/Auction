@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title Auction</title> 
+    <title>@ViewBag.Title Auction</title>
 
-    @Styles.Render("~/Content/css") 
+    @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/font-css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -22,9 +22,16 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>  
-                    <li>@Html.ActionLink("Lots", "Index", "Lots")</li>   
-                    <li>@Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-eur" , title="Sold lots"})</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Lots", "Index", "Lots")</li>
+
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                    {
+
+                        <li>
+                            @Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-eur", title = "Sold lots" })
+                        </li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
