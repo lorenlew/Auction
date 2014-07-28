@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Models;
-using Auction.Models.DomainModels;
 using Auction.Models.ViewModels;
+using DomainModels.DomainModels;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace Auction.Controllers.EntitiesControllers
@@ -29,7 +29,7 @@ namespace Auction.Controllers.EntitiesControllers
         public ActionResult Index(bool? isAjax)
         {
             bool isAjaxRequest = isAjax ?? false;
-            var lotsWithStakes = ApplicationDbContext.GetLotsAndStakesViewModel();
+            var lotsWithStakes = ViewModelsContext.GetAvailableLotsAndStakesViewModel(db);
             if (isAjaxRequest)
             {
                 return PartialView("_lotsAndStakes", lotsWithStakes);
@@ -42,13 +42,13 @@ namespace Auction.Controllers.EntitiesControllers
         public async Task<ActionResult> SoldLots()
         {
             await CheckWonStakesAsync();
-            var soldLots = ApplicationDbContext.GetSoldLotsAndStakesViewModel();
+            var soldLots = ViewModelsContext.GetSoldLotsAndStakesViewModel(db);
             return View(soldLots);
         }
 
         private async Task CheckWonStakesAsync()
         {
-            var notReportedStakes = (from lots in ApplicationDbContext.GetLotsAndStakesViewModel()
+            var notReportedStakes = (from lots in ViewModelsContext.GetLotsAndStakesViewModel(db)
                                      where !lots.IsSold && !lots.IsAvailable
                                      select lots).ToList();
 
@@ -177,18 +177,22 @@ namespace Auction.Controllers.EntitiesControllers
             return View(lot);
         }
 
-        [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, bool? isMain)
         {
+            bool isMainPage = isMain ?? false;
             Lot lot = db.Lots.Find(id);
             string physicalPath = HttpContext.Server.MapPath(lot.ImagePath);
             System.IO.File.Delete(physicalPath);
             db.Lots.Remove(lot);
             db.SaveChanges();
+            if (isMainPage)
+            {
+                return PartialView("_lotsAndStakes", ViewModelsContext.GetAvailableLotsAndStakesViewModel(db));
+            }
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_soldLots", ApplicationDbContext.GetSoldLotsAndStakesViewModel());
+                return PartialView("_soldLots", ViewModelsContext.GetSoldLotsAndStakesViewModel(db));
             }
             return RedirectToAction("Index");
         }

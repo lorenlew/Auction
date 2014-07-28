@@ -7,7 +7,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Models;
-using Auction.Models.DomainModels;
 using Auction.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -27,12 +26,12 @@ namespace Auction.Controllers.EntitiesControllers
         public ActionResult Create(int id, double? stakeIncrease)
         {
             stakeIncrease = stakeIncrease ?? 1.05;
-            var currentLot = ApplicationDbContext.GetCurrentLot(id);
+            var currentLot = ViewModelsContext.GetCurrentLot(id, db);
             if (!currentLot.IsAvailable)
             {
                 return View("LotIsSold");
             }
-            var currentStake = ApplicationDbContext.GetCurrentStake(id, stakeIncrease, currentLot);
+            var currentStake = ViewModelsContext.GetCurrentStake(id, stakeIncrease, currentLot);
             db.Stakes.Add(currentStake);
             db.SaveChanges();
             return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });

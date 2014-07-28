@@ -81,13 +81,21 @@
                         if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                         {
                             @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
-                            @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger block-frame", title = "Delete" })
+
+                            @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId, isMain = true },
+                            new AjaxOptions
+                            {
+                                UpdateTargetId = "lotsAndStakes",
+                                InsertionMode = InsertionMode.Replace,
+                                HttpMethod = "Get",
+                                Confirm = "Sure you want to delete lot?"
+                            }, new { @class = "btn btn-danger fa fa-trash-o", title = "Delete sold lot" })
                         }
                         <ul>
                             @if (item.LastStake == null)
                             {
                                 <li>
-                                    @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId }, new AjaxOptions
+                                    @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId}, new AjaxOptions
                                     {
                                         UpdateTargetId = "lotsAndStakes",
                                         InsertionMode = InsertionMode.Replace,

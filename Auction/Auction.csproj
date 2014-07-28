@@ -172,8 +172,6 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Attributes\FileSizeAttribute.cs" />
-    <Compile Include="Attributes\FileTypesAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EntitiesControllers\LotsController.cs" />
     <Compile Include="Controllers\EntitiesControllers\StakesController.cs" />
@@ -213,9 +211,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\DomainModels\Lot.cs" />
-    <Compile Include="Models\DomainModels\Stake.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModelsContext.cs" />
     <Compile Include="Models\ViewModels\LotViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -326,6 +323,12 @@
     <EmbeddedResource Include="Migrations\201407272032070_isSold.resx">
       <DependentUpon>201407272032070_isSold.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DomainModels\DomainModels.csproj">
+      <Project>{4a1b95ef-445a-46b1-9a2a-fff953cd5b3b}</Project>
+      <Name>DomainModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

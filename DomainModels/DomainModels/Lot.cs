@@ -5,9 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Web;
-using Auction.Attribute;
+using DomainModels.DomainModels;
+using  DomainModels.Attributes;
 
-namespace Auction.Models.DomainModels
+namespace DomainModels.DomainModels
 {
     public class Lot
     {
@@ -43,6 +44,5 @@ namespace Auction.Models.DomainModels
 
         public bool IsSold { get; set; }
         public virtual ICollection<Stake> Stakes { get; set; }
-
     }
 }
