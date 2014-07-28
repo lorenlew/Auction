@@ -177,8 +177,7 @@ namespace Auction.Controllers.EntitiesControllers
             return View(lot);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -187,6 +186,10 @@ namespace Auction.Controllers.EntitiesControllers
             System.IO.File.Delete(physicalPath);
             db.Lots.Remove(lot);
             db.SaveChanges();
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_soldLots", ApplicationDbContext.GetSoldLotsAndStakesViewModel());
+            }
             return RedirectToAction("Index");
         }
 
