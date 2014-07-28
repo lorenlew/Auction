@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Auction.Models
+namespace Auction.ViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {

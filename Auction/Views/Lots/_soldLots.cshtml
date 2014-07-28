@@ -1,5 +1,5 @@
-﻿@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
- 
+﻿@model IEnumerable<Auction.ViewModels.LotViewModel>
+
 @Html.AntiForgeryToken()
 <div class="modal-content">
     <table class="table table-striped table-hover table-responsive table-condensed table-bordered tab-content">
@@ -17,10 +17,10 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LastStake)
-            </th>   
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.ApplicationUserId)
-            </th> 
+            </th>
             <th>
             </th>
         </tr>
@@ -42,19 +42,19 @@
                 </td>
                 <td class="stake-cell">
                     @Html.DisplayFor(modelItem => item.LastStake)
-                </td>   
+                </td>
                 <td class="stake-cell">
                     @Html.DisplayFor(modelItem => item.ApplicationUserId)
                 </td>
                 <td class="stake-cell">
-                    @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId},
-                            new AjaxOptions
-                            {
-                                UpdateTargetId = "soldLots",
-                                InsertionMode = InsertionMode.Replace,
-                                HttpMethod = "Post",
-                                Confirm = "Sure you want to delete lot?"
-                            }, new { @class = "btn btn-danger fa fa-trash-o",title = "Delete sold lot" })
+                    @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId },
+                        new AjaxOptions
+                        {
+                            UpdateTargetId = "soldLots",
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "Post",
+                            Confirm = "Sure you want to delete lot?"
+                        }, new { @class = "btn btn-danger fa fa-trash-o", title = "Delete sold lot" })
                 </td>
             </tr>
         }

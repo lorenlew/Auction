@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using Auction.Models.ViewModels;
-using DomainModels.DomainModels;
-using Microsoft.AspNet.Identity;
+﻿using System.Data.Entity;
+using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ninject.Infrastructure.Language;
 
-namespace Auction.Models
+namespace Auction.DAL
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

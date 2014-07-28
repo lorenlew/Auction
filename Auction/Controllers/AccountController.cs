@@ -5,12 +5,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Auction.DAL.DomainModels;
+using Auction.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Owin;
-using Auction.Models;
 
 namespace Auction.Controllers
 {
@@ -25,6 +26,7 @@ namespace Auction.Controllers
 
         public AccountController(ApplicationUserManager userManager)
         {
+            if (userManager == null) throw new ArgumentNullException("userManager");
             UserManager = userManager;
         }
 
@@ -45,6 +47,7 @@ namespace Auction.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -54,8 +57,10 @@ namespace Auction.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login( LoginViewModel model,  string returnUrl)
         {
+            if (model == null) throw new ArgumentNullException("model");
+            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.Email, model.Password);
@@ -103,6 +108,7 @@ namespace Auction.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register([Bind(Include = "Email,FirstName,LastName,PhoneNumber,Password,ConfirmPassword")]RegisterViewModel model)
         {
+            if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser()
@@ -171,8 +177,9 @@ namespace Auction.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword( ForgotPasswordViewModel model)
         {
+            if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
@@ -219,8 +226,9 @@ namespace Auction.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword( ResetPasswordViewModel model)
         {
+            if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
@@ -412,8 +420,10 @@ namespace Auction.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,string returnUrl)
         {
+            if (model == null) throw new ArgumentNullException("model");
+            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Manage");
@@ -569,6 +579,7 @@ namespace Auction.Controllers
 
             public override void ExecuteResult(ControllerContext context)
             {
+                if (context == null) throw new ArgumentNullException("context");
                 var properties = new AuthenticationProperties() { RedirectUri = RedirectUri };
                 if (UserId != null)
                 {

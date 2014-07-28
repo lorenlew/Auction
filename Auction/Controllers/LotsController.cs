@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Auction.Models;
-using Auction.Models.ViewModels;
-using DomainModels.DomainModels;
+using Auction.DAL;
+using Auction.DAL.DomainModels;
+using Auction.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 
-namespace Auction.Controllers.EntitiesControllers
+namespace Auction.Controllers
 {
     public class LotsController : Controller
     {
@@ -29,7 +26,7 @@ namespace Auction.Controllers.EntitiesControllers
         public ActionResult Index(bool? isAjax)
         {
             bool isAjaxRequest = isAjax ?? false;
-            var lotsWithStakes = ViewModelsContext.GetAvailableLotsAndStakesViewModel(db);
+            var lotsWithStakes = ViewModelsLogic.GetAvailableLotsAndStakesViewModel(db);
             if (isAjaxRequest)
             {
                 return PartialView("_lotsAndStakes", lotsWithStakes);
@@ -42,13 +39,13 @@ namespace Auction.Controllers.EntitiesControllers
         public async Task<ActionResult> SoldLots()
         {
             await CheckWonStakesAsync();
-            var soldLots = ViewModelsContext.GetSoldLotsAndStakesViewModel(db);
+            var soldLots = ViewModelsLogic.GetSoldLotsAndStakesViewModel(db);
             return View(soldLots);
         }
 
         private async Task CheckWonStakesAsync()
         {
-            var notReportedStakes = (from lots in ViewModelsContext.GetLotsAndStakesViewModel(db)
+            var notReportedStakes = (from lots in ViewModelsLogic.GetLotsAndStakesViewModel(db)
                                      where !lots.IsSold && !lots.IsAvailable
                                      select lots).ToList();
 
@@ -87,48 +84,48 @@ namespace Auction.Controllers.EntitiesControllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult Create([Bind(Include = "LotId,Name,Description,Image,HoursDuration,InitialStake")] Lot lot)
         {
-            if (ModelState.IsValid)
+            if (lot == null)
             {
-                string fileName = Guid.NewGuid() + "." + Path.GetExtension((lot.Image.FileName)).Substring(1);
-                string virtualPath = "/Content/Images/LotImages/" + fileName;
-                string physicalPath = HttpContext.Server.MapPath(virtualPath);
-                lot.ImagePath = virtualPath;
-                try
-                {
-                    db.Lots.Add(lot);
-                    db.SaveChanges();
-                    lot.Image.SaveAs(physicalPath);
-
-                }
-                catch (DbUpdateException e)
-                {
-                    SqlException innerException = null;
-                    Exception tmp = e;
-                    while (innerException == null && tmp != null)
-                    {
-                        if (tmp != null)
-                        {
-                            innerException = tmp.InnerException as SqlException;
-                            tmp = tmp.InnerException;
-                        }
-
-                    }
-                    if (innerException != null && innerException.Number == 2601)
-                    {
-                        ModelState.AddModelError("", "Name " + lot.Name + " is already taken.");
-                        return View(lot);
-                    }
-                    throw;
-                }
+                throw new ArgumentNullException("lot");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(lot);
+            }
+            if (!IsLotNameUnique(lot))
+            {
+                ModelState.AddModelError("", "Same name is already used");
+                return View(lot);
+            }
+            var extension = Path.GetExtension((lot.Image.FileName));
+            if (extension == null)
+            {
                 return RedirectToAction("Index");
             }
-            return View(lot);
+
+            string fileName = Guid.NewGuid() + "." + extension.Substring(1);
+            string virtualPath = "/Content/Images/LotImages/" + fileName;
+            string physicalPath = HttpContext.Server.MapPath(virtualPath);
+            lot.ImagePath = virtualPath;
+
+            db.Lots.Add(lot);
+            db.SaveChanges();
+            lot.Image.SaveAs(physicalPath);
+            return RedirectToAction("Index");
+        }
+
+        private bool IsLotNameUnique(Lot lot)
+        {
+            var currentLot = from l in db.Lots
+                          where l.Name == lot.Name
+                          select l;
+            var isNameUnique = !currentLot.Any();
+            return isNameUnique;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -151,15 +148,19 @@ namespace Auction.Controllers.EntitiesControllers
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult Edit([Bind(Include = "LotId,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
         {
-            ModelState.Remove("Image");
-            if (ModelState.IsValid)
+            if (lot == null)
             {
-                db.Entry(lot).State = EntityState.Modified;
-                db.Configuration.ValidateOnSaveEnabled = false;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                throw new ArgumentNullException("lot");
             }
-            return View(lot);
+            ModelState.Remove("Image");
+            if (!ModelState.IsValid)
+            {
+                return View(lot);
+            }
+            db.Entry(lot).State = EntityState.Modified;
+            db.Configuration.ValidateOnSaveEnabled = false;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -188,11 +189,11 @@ namespace Auction.Controllers.EntitiesControllers
             db.SaveChanges();
             if (isMainPage)
             {
-                return PartialView("_lotsAndStakes", ViewModelsContext.GetAvailableLotsAndStakesViewModel(db));
+                return PartialView("_lotsAndStakes", ViewModelsLogic.GetAvailableLotsAndStakesViewModel(db));
             }
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_soldLots", ViewModelsContext.GetSoldLotsAndStakesViewModel(db));
+                return PartialView("_soldLots", ViewModelsLogic.GetSoldLotsAndStakesViewModel(db));
             }
             return RedirectToAction("Index");
         }

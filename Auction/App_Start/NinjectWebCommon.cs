@@ -1,4 +1,6 @@
-using Auction.Models;
+
+
+using Auction.DAL;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Auction.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(Auction.App_Start.NinjectWebCommon), "Stop")]

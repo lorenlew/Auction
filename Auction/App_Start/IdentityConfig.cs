@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Auction.DAL;
+using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Auction.Models;
 
 namespace Auction
 {

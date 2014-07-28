@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<Auction.Models.ApplicationUser>
+@model IEnumerable<Auction.DAL.DomainModels.ApplicationUser>
 <h1 class="text-center">
     @if (User.IsInRole("Administrator"))
     {
@@ -45,7 +45,7 @@
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-success" })
+                                }, new { @class = "btn btn-success btn-block" })
             }
             else
             {
@@ -54,7 +54,7 @@
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-default" })
+                                }, new { @class = "btn btn-default btn-block" })
             }
 
         }
@@ -70,7 +70,7 @@
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-default" })
+                                }, new { @class = "btn btn-default btn-block" })
                             }
                             else
                             {
@@ -79,7 +79,7 @@
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-success" })
+                                }, new { @class = "btn btn-success btn-block" })
                             }
                         </td>
                     }

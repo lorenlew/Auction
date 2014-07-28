@@ -173,8 +173,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\EntitiesControllers\LotsController.cs" />
-    <Compile Include="Controllers\EntitiesControllers\StakesController.cs" />
+    <Compile Include="Controllers\LotsController.cs" />
+    <Compile Include="Controllers\StakesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserManipulationController.cs" />
     <Compile Include="Global.asax.cs">
@@ -209,11 +209,9 @@
       <DependentUpon>201407272032070_isSold.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ViewModelsContext.cs" />
-    <Compile Include="Models\ViewModels\LotViewModel.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
+    <Compile Include="ViewModels\ViewModelsLogic.cs" />
+    <Compile Include="ViewModels\LotViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -325,9 +323,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DomainModels\DomainModels.csproj">
+    <ProjectReference Include="..\DomainModels\Auction.DAL.csproj">
       <Project>{4a1b95ef-445a-46b1-9a2a-fff953cd5b3b}</Project>
-      <Name>DomainModels</Name>
+      <Name>Auction.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

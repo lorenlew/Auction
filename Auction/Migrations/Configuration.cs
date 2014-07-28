@@ -1,4 +1,5 @@
-using Auction.Models;
+using Auction.DAL;
+using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -9,7 +10,7 @@ namespace Auction.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Auction.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
@@ -17,7 +18,7 @@ namespace Auction.Migrations
             ContextKey = "Auction.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(Auction.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));

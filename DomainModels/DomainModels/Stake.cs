@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainModels.DomainModels
+namespace Auction.DAL.DomainModels
 {
     public class Stake
     {

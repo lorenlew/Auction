@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq;
 using System.Web;
-using DomainModels.DomainModels;
-using  DomainModels.Attributes;
+using Auction.DAL.Attributes;
 
-namespace DomainModels.DomainModels
+namespace Auction.DAL.DomainModels
 {
     public class Lot
     {

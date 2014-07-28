@@ -27,7 +27,6 @@
 
                     @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                     {
-
                         <li>
                             @Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-dollar fa-2x", title = "Sold lots" })
                         </li>

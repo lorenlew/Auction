@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
-using Auction.Models;
-using Auction.Models.ViewModels;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Auction.DAL;
+using Auction.ViewModels;
 
-namespace Auction.Controllers.EntitiesControllers
+namespace Auction.Controllers
 {
     public class StakesController : Controller
     {
@@ -23,15 +15,27 @@ namespace Auction.Controllers.EntitiesControllers
         }
 
         [Authorize]
-        public ActionResult Create(int id, double? stakeIncrease)
+        public ActionResult Create(int? id, double? stakeIncrease)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             stakeIncrease = stakeIncrease ?? 1.05;
-            var currentLot = ViewModelsContext.GetCurrentLot(id, db);
+            var currentLot = ViewModelsLogic.GetCurrentLot((int)id, db);
+            if (currentLot == null)
+            {
+                return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
+            }
             if (!currentLot.IsAvailable)
             {
                 return View("LotIsSold");
             }
-            var currentStake = ViewModelsContext.GetCurrentStake(id, stakeIncrease, currentLot);
+            var currentStake = ViewModelsLogic.GetCurrentStake((int)id, stakeIncrease, currentLot);
+            if (currentStake == null)
+            {
+                return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
+            }
             db.Stakes.Add(currentStake);
             db.SaveChanges();
             return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });

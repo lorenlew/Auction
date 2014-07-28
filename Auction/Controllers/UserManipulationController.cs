@@ -5,11 +5,11 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Auction.DAL;
+using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Auction.Models;
-using Auction.Models.ViewModels;
 using WebGrease.Css.Extensions;
 
 namespace Auction.Controllers
@@ -17,19 +17,19 @@ namespace Auction.Controllers
     public class UserManipulationController : Controller
     {
         private ApplicationDbContext db;
-        private UserManager<ApplicationUser> UserManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public UserManipulationController(ApplicationDbContext context)
         {
             db = context;
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
             var users = db.Users;
-            ViewBag.userManager = UserManager;
+            ViewBag.userManager = _userManager;
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_UserManipulation", users);
@@ -40,21 +40,19 @@ namespace Auction.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult SetToRole(string name)
         {
-
             if (name == null)
             {
                 return UserManagement(); ;
             }
-            var targetUserId = GetUserId(name, UserManager);
-            var isTargetUserModerator = UserManager.IsInRole(targetUserId, "Moderator");
-
+            var targetUserId = GetUserId(name, _userManager);
+            var isTargetUserModerator = _userManager.IsInRole(targetUserId, "Moderator");
             if (isTargetUserModerator)
             {
-                UserManager.RemoveFromRole(targetUserId, "Moderator");
+                _userManager.RemoveFromRole(targetUserId, "Moderator");
             }
             else
             {
-                UserManager.AddToRole(targetUserId, "Moderator");
+                _userManager.AddToRole(targetUserId, "Moderator");
             }
             return UserManagement();
         }
@@ -73,18 +71,18 @@ namespace Auction.Controllers
             {
                 return UserManagement();
             }
-            var targetUser = UserManager.FindByName(name);
+            var targetUser = _userManager.FindByName(name);
             if (targetUser == null)
             {
                 return UserManagement();
             }
-            var isUserPerformingActionModerator = UserManager.IsInRole(User.Identity.GetUserId(), "Moderator");
-            var isTargetUserModerator = UserManager.IsInRole(targetUser.Id, "Moderator");
+            var isUserPerformingActionModerator = _userManager.IsInRole(User.Identity.GetUserId(), "Moderator");
+            var isTargetUserModerator = _userManager.IsInRole(targetUser.Id, "Moderator");
 
             if (User.IsInRole("Administrator") || (isUserPerformingActionModerator && !isTargetUserModerator))
             {
                 targetUser.IsBanned = !targetUser.IsBanned;
-                UserManager.Update(targetUser);
+                _userManager.Update(targetUser);
             }
             return UserManagement();
         }

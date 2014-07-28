@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Auction.DAL;
+using Auction.DAL.DomainModels;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -7,7 +9,7 @@ using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using System;
-using Auction.Models;
+
 
 namespace Auction
 {

@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web;
 
-namespace DomainModels.Attributes
+namespace Auction.DAL.Attributes
 {
     public class FileSizeAttribute : ValidationAttribute
     {
@@ -14,9 +15,10 @@ namespace DomainModels.Attributes
 
         public override bool IsValid(object value)
         {
-            if (value == null) return true;
+            if (value == null) throw new ArgumentNullException("value");
 
-            return (value as HttpPostedFileBase).ContentLength <= _maxSize;
+            var httpPostedFileBase = value as HttpPostedFileBase;
+            return httpPostedFileBase != null && httpPostedFileBase.ContentLength <= _maxSize;
         }
 
         public override string FormatErrorMessage(string name)

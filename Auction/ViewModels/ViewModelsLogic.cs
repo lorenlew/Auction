@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Auction.Models.ViewModels;
-using DomainModels.DomainModels;
+using Auction.DAL;
+using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity;
 
-namespace Auction.Models
+namespace Auction.ViewModels
 {
-    public class ViewModelsContext
+    public class ViewModelsLogic
     {
         public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel(ApplicationDbContext db)
         {
@@ -37,10 +37,12 @@ namespace Auction.Models
                                     select firstOrDefault).ToList();
             return groupedLotStakes;
         }
+
         public static IEnumerable<LotViewModel> GetAvailableLotsAndStakesViewModel(ApplicationDbContext db)
         {
             var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(db)
                                           where !lots.IsSold
+                                          orderby lots.Name
                                           select lots).ToList();
 
             return availableLotsAndStakes;
@@ -65,6 +67,7 @@ namespace Auction.Models
 
         public static Stake GetCurrentStake(int id, double? stakeIncrease, LotViewModel currentLot)
         {
+            if (currentLot == null) throw new ArgumentNullException("currentLot");
             var currentStake = new Stake
             {
                 LotId = id,

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
+﻿@model IEnumerable<Auction.ViewModels.LotViewModel>
 
 <div class="modal-content">
     <table class="table  table-hover table-responsive table-condensed table-bordered tab-content">
@@ -83,26 +83,26 @@
                             @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
 
                             @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId, isMain = true },
-                            new AjaxOptions
-                            {
-                                UpdateTargetId = "lotsAndStakes",
-                                InsertionMode = InsertionMode.Replace,
-                                HttpMethod = "Get",
-                                Confirm = "Sure you want to delete lot?"
-                            }, new { @class = "btn btn-danger fa fa-trash-o", title = "Delete sold lot" })
+                                new AjaxOptions
+                                {
+                                    UpdateTargetId = "lotsAndStakes",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "Get",
+                                    Confirm = "Sure you want to delete lot?"
+                                }, new { @class = "btn btn-danger fa fa-trash-o btn-block", title = "Delete lot" })
                         }
                         <ul>
                             @if (item.LastStake == null)
                             {
                                 <li>
-                                    @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId}, new AjaxOptions
+                                    @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId }, new AjaxOptions
                                     {
                                         UpdateTargetId = "lotsAndStakes",
                                         InsertionMode = InsertionMode.Replace,
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to a make stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default block-frame" })
+                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
                                 </li>
                             }
                             else
@@ -115,7 +115,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default block-frame" })
+                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
                                 </li>
                                 <li>
                                     @Ajax.ActionLink("+10%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.1 }, new AjaxOptions
@@ -125,7 +125,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default block-frame" })
+                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
                                 </li>
                                 <li>
                                     @Ajax.ActionLink("+20%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.2 }, new AjaxOptions
@@ -135,7 +135,7 @@
                                         HttpMethod = "Get",
                                         Confirm = "Sure you want to make a stake?",
                                         LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default block-frame" })
+                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
                                 </li>
                                 <li id="loading_@item.LotId" class="fa fa-spinner fa-spin" style="display: none"></li>
                             }
