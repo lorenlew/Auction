@@ -74,10 +74,11 @@
                         <span class="btn btn-danger fa fa-lock"></span>
                     }
                 </td>
-                @if (User.Identity.IsAuthenticated && item.IsAvailable)
-                {
-                    <td class="stake-cell">
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+
+                <td class="stake-cell">
+                    @if (User.Identity.IsAuthenticated && item.IsAvailable)
+                    {
+                        if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                         {
                             @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
                             @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger block-frame", title = "Delete" })
@@ -131,8 +132,8 @@
                                 <li id="loading_@item.LotId" class="fa fa-spinner fa-spin" style="display: none"></li>
                             }
                         </ul>
-                    </td>
-                }
+                    }
+                </td>
             </tr>
         }
     </table>

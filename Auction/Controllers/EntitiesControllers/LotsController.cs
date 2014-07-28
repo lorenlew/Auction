@@ -41,8 +41,8 @@ namespace Auction.Controllers.EntitiesControllers
         [Authorize(Roles = "Administrator, Moderator")]
         public async Task<ActionResult> SoldLots()
         {
-            var soldLots = ApplicationDbContext.GetSoldLotsAndStakesViewModel();
             await CheckWonStakesAsync();
+            var soldLots = ApplicationDbContext.GetSoldLotsAndStakesViewModel();
             return View(soldLots);
         }
 
