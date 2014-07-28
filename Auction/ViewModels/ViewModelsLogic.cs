@@ -61,7 +61,7 @@ namespace Auction.ViewModels
         {
             var currentLot = (from lots in GetAvailableLotsAndStakesViewModel(db)
                               where lots.LotId == id
-                              select lots).Single();
+                              select lots).SingleOrDefault();
             return currentLot;
         }
 

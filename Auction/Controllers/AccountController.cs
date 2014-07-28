@@ -47,7 +47,6 @@ namespace Auction.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -60,7 +59,6 @@ namespace Auction.Controllers
         public async Task<ActionResult> Login( LoginViewModel model,  string returnUrl)
         {
             if (model == null) throw new ArgumentNullException("model");
-            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.Email, model.Password);
@@ -303,6 +301,7 @@ namespace Auction.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
+            if (model == null) throw new ArgumentNullException("model");
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -422,8 +421,6 @@ namespace Auction.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,string returnUrl)
         {
-            if (model == null) throw new ArgumentNullException("model");
-            if (returnUrl == null) throw new ArgumentNullException("returnUrl");
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Manage");
