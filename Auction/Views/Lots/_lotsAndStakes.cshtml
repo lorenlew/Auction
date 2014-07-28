@@ -40,31 +40,31 @@
         @foreach (var item in Model)
         {
             <tr class="no-shadow">
-                <td class="info-cell">
+                <td class="lot-cell">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td class="info-cell">
+                <td class="lot-cell">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td class="info-cell">
+                <td class="lot-cell">
                     <img class="img-content" src=@item.ImagePath />
                 </td>
-                <td class="info-cell">
+                <td class="lot-cell">
                     @Html.DisplayFor(modelItem => item.HoursDuration)
                 </td>
-                <td class="info-cell">
+                <td class="lot-cell">
                     @Html.DisplayFor(modelItem => item.InitialStake)
                 </td>
-                <td>
+                <td class="stake-cell">
                     @Html.DisplayFor(modelItem => item.LastDateOfStake)
                 </td>
-                <td>
+                <td class="stake-cell">
                     @Html.DisplayFor(modelItem => item.StakeTimeout)
                 </td>
-                <td>
+                <td class="stake-cell">
                     @Html.DisplayFor(modelItem => item.LastStake)
                 </td>
-                <td>
+                <td class="stake-cell">
                     @if (item.IsAvailable)
                     {
                         <span class="btn btn-success fa fa-unlock"></span>
@@ -76,7 +76,7 @@
                 </td>
                 @if (User.Identity.IsAuthenticated && item.IsAvailable)
                 {
-                    <td>
+                    <td class="stake-cell">
                         @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                         {
                             @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })

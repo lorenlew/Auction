@@ -102,11 +102,13 @@ namespace Auction.Controllers.EntitiesControllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Moderator")]
-        public ActionResult Edit([Bind(Include = "LotId,Name,Description,Image,HoursDuration,InitialStake")] Lot lot)
+        public ActionResult Edit([Bind(Include = "LotId,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
         {
+            ModelState.Remove("Image"); 
             if (ModelState.IsValid)
             {
                 db.Entry(lot).State = EntityState.Modified;
+                db.Configuration.ValidateOnSaveEnabled = false; 
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

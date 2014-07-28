@@ -12,12 +12,12 @@ namespace Auction.Models.ViewModels
         public int LotId { get; set; }
 
         [Display(Name = "Lot name")]
-        [StringLength(100)]
         public string Name { get; set; }
 
         [Display(Name = "Lot description")]
         public string Description { get; set; }
 
+        [Display(Name = "Image")]
         public string ImagePath { get; set; }
 
         [Display(Name = "Duration (hours)")]
@@ -37,7 +37,11 @@ namespace Auction.Models.ViewModels
         [Display(Name = "Last stake")]
         public int? LastStake { get; set; }
 
+        public string ApplicationUserId { get; set; }
+
         [Display(Name = "Is available")]
         public bool IsAvailable { get; set; }
+
+        public bool IsSold { get; set; }
     }
 }

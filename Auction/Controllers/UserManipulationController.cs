@@ -22,11 +22,11 @@ namespace Auction.Controllers
         public UserManipulationController(ApplicationDbContext context)
         {
             db = context;
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
-        public async Task<ActionResult> UsersAndRoles()
+        public async Task<ActionResult> UserManagement()
         {
             var users = db.Users;
             ViewBag.userManager = UserManager;
@@ -34,18 +34,43 @@ namespace Auction.Controllers
             {
                 return PartialView("_UserManipulation", users);
             }
-            await SendNotificationsAsync();
+            await CheckWonStakesAsync();
             return View(users);
         }
 
-        private async Task SendNotificationsAsync()
+        private async Task CheckWonStakesAsync()
         {
-            await SendInfoToWinners();
+            var notReportedStakes = (from lots in ApplicationDbContext.GetLotsAndStakesViewModel()
+                                     where !lots.IsSold && !lots.IsAvailable
+                                     select lots).ToList();
+
+            if (notReportedStakes.Any())
+            {
+                await SendNotificationsToWinnersAsync(notReportedStakes);
+            }
         }
 
-        private async Task SendInfoToWinners()
+        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotViewModel> notReportedStakes)
         {
-            //
+            var applicationUserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            try
+            {
+                foreach (var stake in notReportedStakes)
+                {
+                    string emailBody = "<h2>You've won '" + stake.Name +
+                                       "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
+
+                    await applicationUserManager.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
+                    db.Lots.Find(stake.LotId).IsSold = true;
+                    db.Configuration.ValidateOnSaveEnabled = false; 
+                    db.SaveChanges();
+                }
+            }
+            finally
+            {
+                applicationUserManager.Dispose();
+            }
+
         }
 
         [Authorize(Roles = "Administrator")]
@@ -54,7 +79,7 @@ namespace Auction.Controllers
 
             if (name == null)
             {
-                return UsersAndRoles(); ;
+                return UserManagement(); ;
             }
             var targetUserId = GetUserId(name, UserManager);
             var isTargetUserModerator = UserManager.IsInRole(targetUserId, "Moderator");
@@ -67,7 +92,7 @@ namespace Auction.Controllers
             {
                 UserManager.AddToRole(targetUserId, "Moderator");
             }
-            return UsersAndRoles();
+            return UserManagement();
         }
 
         private string GetUserId(string name, UserManager<ApplicationUser> userManager)
@@ -82,12 +107,12 @@ namespace Auction.Controllers
         {
             if (name == null)
             {
-                return UsersAndRoles();
+                return UserManagement();
             }
             var targetUser = UserManager.FindByName(name);
             if (targetUser == null)
             {
-                return UsersAndRoles();
+                return UserManagement();
             }
             var isUserPerformingActionModerator = UserManager.IsInRole(User.Identity.GetUserId(), "Moderator");
             var isTargetUserModerator = UserManager.IsInRole(targetUser.Id, "Moderator");
@@ -97,7 +122,7 @@ namespace Auction.Controllers
                 targetUser.IsBanned = !targetUser.IsBanned;
                 UserManager.Update(targetUser);
             }
-            return UsersAndRoles();
+            return UserManagement();
         }
 
         protected override void Dispose(bool disposing)

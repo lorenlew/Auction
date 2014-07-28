@@ -10,7 +10,7 @@
             @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
             {
                 <li>
-                    @Html.ActionLink("Admin tools", "UsersAndRoles", "UserManipulation")
+                    @Html.ActionLink("Admin tools", "UserManagement", "UserManipulation")
                 </li>
             }
             <li>

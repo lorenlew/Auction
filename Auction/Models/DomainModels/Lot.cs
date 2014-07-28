@@ -25,11 +25,12 @@ namespace Auction.Models.DomainModels
         public string Description { get; set; }
 
         [NotMapped]
-        [Required]
         [FileSize(15360000)]
         [FileTypes("jpg,jpeg,png")]
+        [Required(ErrorMessage = "Upload image")]
         public HttpPostedFileBase Image { get; set; }
 
+        [Display(Name = "Image")]
         public string ImagePath { get; set; }
 
         [Display(Name = "Duration (hours)")]

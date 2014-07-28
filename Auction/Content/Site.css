@@ -166,7 +166,12 @@ div.block-frame:hover {
     width: 200px;
 }
 
-.info-cell {
+.lot-cell {
     background-color: #98fb98;
     background-color: rgba(152, 251, 152, 0.2);
+}
+
+.stake-cell {
+    background-color: #ffd800;
+    background-color: rgba(255, 216, 0, 0.31);
 }

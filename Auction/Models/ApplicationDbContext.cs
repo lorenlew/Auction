@@ -27,7 +27,6 @@ namespace Auction.Models
             return new ApplicationDbContext();
         }
 
-
         public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel()
         {
             ApplicationDbContext db = Create();
@@ -44,10 +43,12 @@ namespace Auction.Models
                                      ImagePath = lot.ImagePath,
                                      HoursDuration = lot.HoursDuration,
                                      InitialStake = lot.InitialStake,
+                                     IsSold = lot.IsSold,
                                      LastDateOfStake = jLotsAndStakes.DateOfStake,
                                      StakeTimeout = jLotsAndStakes.StakeTimeout,
                                      LastStake = jLotsAndStakes.CurrentStake,
-                                     IsAvailable =  (bool?) (jLotsAndStakes.StakeTimeout > DateTime.Now) ?? true
+                                     ApplicationUserId = jLotsAndStakes.ApplicationUserId,
+                                     IsAvailable = (bool?)(jLotsAndStakes.StakeTimeout > DateTime.Now) ?? true
                                  });
 
             var groupedLotStakes = (from lots in lotsAndStakes
@@ -56,9 +57,18 @@ namespace Auction.Models
                                     select firstOrDefault).ToList();
             return groupedLotStakes;
         }
+        public static IEnumerable<LotViewModel> GetAvailableLotsAndStakesViewModel()
+        {
+            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel()
+                                 where !lots.IsSold
+                                 select lots).ToList();
+
+            return availableLotsAndStakes;
+        }
+
         public static LotViewModel GetCurrentLot(int id)
         {
-            var currentLot = (from lots in GetLotsAndStakesViewModel()
+            var currentLot = (from lots in GetAvailableLotsAndStakesViewModel()
                               where lots.LotId == id
                               select lots).Single();
             return currentLot;

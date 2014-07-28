@@ -286,7 +286,7 @@
     <Content Include="Views\Lots\Index.cshtml" />
     <Content Include="Views\Home\UserInfo.cshtml" />
     <Content Include="Views\Account\CheckEmail.cshtml" />
-    <Content Include="Views\UserManipulation\UsersAndRoles.cshtml" />
+    <Content Include="Views\UserManipulation\UserManagement.cshtml" />
     <Content Include="Views\UserManipulation\_UserManipulation.cshtml" />
     <Content Include="Views\Lots\_lotsAndStakes.cshtml" />
     <Content Include="Views\Stakes\LotIsSold.cshtml" />
