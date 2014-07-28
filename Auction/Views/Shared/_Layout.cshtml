@@ -22,14 +22,14 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink(" ", "Index", "Home", null, new { @class = "fa fa-home fa-2x", title = "Home" })</li>
                     <li>@Html.ActionLink("Lots", "Index", "Lots")</li>
 
                     @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                     {
 
                         <li>
-                            @Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-eur", title = "Sold lots" })
+                            @Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-dollar fa-2x", title = "Sold lots" })
                         </li>
                     }
                 </ul>

@@ -6,17 +6,17 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>@Html.ActionLink(" ", "UserInfo", "Home", null, new { @class = "glyphicon glyphicon-user" })</li>
+            <li>@Html.ActionLink(" ", "UserInfo", "Home", null, new { @class = "fa fa-user fa-2x", title="User info"})</li>
             @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
             {
                 <li>
-                    @Html.ActionLink("Admin tools", "UserManagement", "UserManipulation")
+                    @Html.ActionLink(" ", "UserManagement", "UserManipulation", null, new { @class = "fa fa-exchange fa-2x", title = "User management" })
                 </li>
             }
             <li>
                 @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" })
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li><a class="fa fa-sign-out fa-2x" title="Log off" href="javascript:document.getElementById('logoutForm').submit()"></a></li>
         </ul>
     }
 }

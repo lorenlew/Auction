@@ -47,14 +47,14 @@
                     @Html.DisplayFor(modelItem => item.ApplicationUserId)
                 </td>
                 <td class="stake-cell">
-                    @Ajax.ActionLink("x", "DeleteConfirmed", "Lots", new { id = item.LotId},
+                    @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId},
                             new AjaxOptions
                             {
                                 UpdateTargetId = "soldLots",
                                 InsertionMode = InsertionMode.Replace,
                                 HttpMethod = "Post",
                                 Confirm = "Sure you want to delete lot?"
-                            }, new { @class = "btn btn-danger",title = "Delete sold lot" })
+                            }, new { @class = "btn btn-danger fa fa-trash-o",title = "Delete sold lot" })
                 </td>
             </tr>
         }
