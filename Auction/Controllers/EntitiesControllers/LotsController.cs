@@ -7,10 +7,13 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Models;
 using Auction.Models.DomainModels;
+using Auction.Models.ViewModels;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Auction.Controllers.EntitiesControllers
 {
@@ -32,6 +35,50 @@ namespace Auction.Controllers.EntitiesControllers
                 return PartialView("_lotsAndStakes", lotsWithStakes);
             }
             return View(lotsWithStakes);
+        }
+
+
+        [Authorize(Roles = "Administrator, Moderator")]
+        public async Task<ActionResult> SoldLots()
+        {
+            var soldLots = ApplicationDbContext.GetSoldLotsAndStakesViewModel();
+            await CheckWonStakesAsync();
+            return View(soldLots);
+        }
+
+        private async Task CheckWonStakesAsync()
+        {
+            var notReportedStakes = (from lots in ApplicationDbContext.GetLotsAndStakesViewModel()
+                                     where !lots.IsSold && !lots.IsAvailable
+                                     select lots).ToList();
+
+            if (notReportedStakes.Any())
+            {
+                await SendNotificationsToWinnersAsync(notReportedStakes);
+            }
+        }
+
+        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotViewModel> notReportedStakes)
+        {
+            var applicationUserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            try
+            {
+                foreach (var stake in notReportedStakes)
+                {
+                    string emailBody = "<h2>You've won '" + stake.Name +
+                                       "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
+
+                    await applicationUserManager.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
+                    db.Lots.Find(stake.LotId).IsSold = true;
+                    db.Configuration.ValidateOnSaveEnabled = false;
+                    db.SaveChanges();
+                }
+            }
+            finally
+            {
+                applicationUserManager.Dispose();
+            }
+
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -104,11 +151,11 @@ namespace Auction.Controllers.EntitiesControllers
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult Edit([Bind(Include = "LotId,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
         {
-            ModelState.Remove("Image"); 
+            ModelState.Remove("Image");
             if (ModelState.IsValid)
             {
                 db.Entry(lot).State = EntityState.Modified;
-                db.Configuration.ValidateOnSaveEnabled = false; 
+                db.Configuration.ValidateOnSaveEnabled = false;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -1,0 +1,14 @@
+﻿@using Auction.Controllers
+@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
+
+@{
+    ViewBag.Title = "Sold lots";
+}
+
+<h1 class="well well-lg text-center">
+    Sold lots
+</h1>
+
+<div id="soldLots">
+    @Html.Partial("_soldLots", Model)
+</div>  

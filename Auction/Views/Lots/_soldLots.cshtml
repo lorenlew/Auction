@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Auction.Models.ViewModels.LotViewModel>
+
+<div class="modal-content">
+    <table class="table table-striped table-hover table-responsive table-condensed table-bordered tab-content">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            <th>
+                @Html.DisplayNameFor(model => model.LastDateOfStake)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StakeTimeout)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastStake)
+            </th>   
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUserId)
+            </th> 
+            <th>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr class="no-shadow">
+                <td class="lot-cell">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="lot-cell">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="stake-cell">
+                    @Html.DisplayFor(modelItem => item.LastDateOfStake)
+                </td>
+                <td class="stake-cell">
+                    @Html.DisplayFor(modelItem => item.StakeTimeout)
+                </td>
+                <td class="stake-cell">
+                    @Html.DisplayFor(modelItem => item.LastStake)
+                </td>   
+                <td class="stake-cell">
+                    @Html.DisplayFor(modelItem => item.ApplicationUserId)
+                </td>
+                <td class="stake-cell">
+                    @Html.ActionLink("Delete", "Delete", new { id = item.LotId }, new { @class = "btn btn-danger block-frame", title = "Delete" })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

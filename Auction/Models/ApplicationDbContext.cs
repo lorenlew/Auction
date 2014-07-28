@@ -33,7 +33,6 @@ namespace Auction.Models
 
             var lotsAndStakes = (from lot in db.Lots
                                  join stake in db.Stakes on lot.LotId equals stake.LotId into joinedLotsAndStakes
-                                 where !lot.IsSold
                                  from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
                                  select new LotViewModel()
                                  {
@@ -62,6 +61,15 @@ namespace Auction.Models
             var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel()
                                  where !lots.IsSold
                                  select lots).ToList();
+
+            return availableLotsAndStakes;
+        }
+
+        public static IEnumerable<LotViewModel> GetSoldLotsAndStakesViewModel()
+        {
+            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel()
+                                          where lots.IsSold
+                                          select lots).ToList();
 
             return availableLotsAndStakes;
         }

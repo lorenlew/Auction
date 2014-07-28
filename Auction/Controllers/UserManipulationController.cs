@@ -26,7 +26,7 @@ namespace Auction.Controllers
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
-        public async Task<ActionResult> UserManagement()
+        public ActionResult UserManagement()
         {
             var users = db.Users;
             ViewBag.userManager = UserManager;
@@ -34,47 +34,11 @@ namespace Auction.Controllers
             {
                 return PartialView("_UserManipulation", users);
             }
-            await CheckWonStakesAsync();
             return View(users);
         }
 
-        private async Task CheckWonStakesAsync()
-        {
-            var notReportedStakes = (from lots in ApplicationDbContext.GetLotsAndStakesViewModel()
-                                     where !lots.IsSold && !lots.IsAvailable
-                                     select lots).ToList();
-
-            if (notReportedStakes.Any())
-            {
-                await SendNotificationsToWinnersAsync(notReportedStakes);
-            }
-        }
-
-        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotViewModel> notReportedStakes)
-        {
-            var applicationUserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            try
-            {
-                foreach (var stake in notReportedStakes)
-                {
-                    string emailBody = "<h2>You've won '" + stake.Name +
-                                       "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
-
-                    await applicationUserManager.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
-                    db.Lots.Find(stake.LotId).IsSold = true;
-                    db.Configuration.ValidateOnSaveEnabled = false; 
-                    db.SaveChanges();
-                }
-            }
-            finally
-            {
-                applicationUserManager.Dispose();
-            }
-
-        }
-
         [Authorize(Roles = "Administrator")]
-        public Task<ActionResult> SetToRole(string name)
+        public ActionResult SetToRole(string name)
         {
 
             if (name == null)
@@ -103,7 +67,7 @@ namespace Auction.Controllers
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
-        public Task<ActionResult> ChangeUserAccess(string name)
+        public ActionResult ChangeUserAccess(string name)
         {
             if (name == null)
             {

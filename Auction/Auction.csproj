@@ -290,6 +290,8 @@
     <Content Include="Views\UserManipulation\_UserManipulation.cshtml" />
     <Content Include="Views\Lots\_lotsAndStakes.cshtml" />
     <Content Include="Views\Stakes\LotIsSold.cshtml" />
+    <Content Include="Views\Lots\_soldLots.cshtml" />
+    <Content Include="Views\Lots\SoldLots.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
