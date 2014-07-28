@@ -12,7 +12,7 @@
 @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
 {
     <p class="no-shadow">
-        @Html.ActionLink("Add new lot", "Create", null, new { @class = "btn btn-primary block-frame glass", title = "" })
+        @Html.ActionLink("Add new lot", "Create", null, new { @class = "btn btn-info block-frame", title = "" })
     </p>
 }     
 

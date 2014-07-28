@@ -62,12 +62,12 @@ body {
 }
 
 a:focus {
-    outline: thin dotted;
+    outline: none;
 }
 
 a:active,
 a:hover {
-    outline: 0;
+    outline: none;
 }
 
 h1 {
@@ -366,11 +366,6 @@ a {
         color: #2a6496;
     }
 
-    a:focus {
-        outline: thin dotted #333;
-        outline: 5px auto -webkit-focus-ring-color;
-        outline-offset: -2px;
-    }
 
 img {
     vertical-align: middle;
