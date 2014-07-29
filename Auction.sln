@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Web", "Auction\Auction.Web.csproj", "{4351E562-C715-4996-893A-7F48CF0FB3D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Web", "Auction.Web\Auction.Web.csproj", "{4351E562-C715-4996-893A-7F48CF0FB3D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.DAL", "DomainModels\Auction.DAL.csproj", "{4A1B95EF-445A-46B1-9A2A-FFF953CD5B3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.DAL", "Auction.DAL\Auction.DAL.csproj", "{4A1B95EF-445A-46B1-9A2A-FFF953CD5B3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Repositories", "Auction.Repositories\Auction.Repositories.csproj", "{73114209-ED21-4E94-9DDA-F07C6D4834F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auction.Interfaces", "Auction.Interfaces\Auction.Interfaces.csproj", "{123771E5-5F19-40E0-94ED-DAF0EE20432D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{4A1B95EF-445A-46B1-9A2A-FFF953CD5B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A1B95EF-445A-46B1-9A2A-FFF953CD5B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A1B95EF-445A-46B1-9A2A-FFF953CD5B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73114209-ED21-4E94-9DDA-F07C6D4834F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73114209-ED21-4E94-9DDA-F07C6D4834F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73114209-ED21-4E94-9DDA-F07C6D4834F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73114209-ED21-4E94-9DDA-F07C6D4834F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123771E5-5F19-40E0-94ED-DAF0EE20432D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123771E5-5F19-40E0-94ED-DAF0EE20432D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123771E5-5F19-40E0-94ED-DAF0EE20432D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123771E5-5F19-40E0-94ED-DAF0EE20432D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
