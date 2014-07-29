@@ -91,7 +91,7 @@ namespace Auction.Controllers
         {
             if (lot == null)
             {
-                throw new ArgumentNullException("lot");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             if (!ModelState.IsValid)
             {
@@ -150,11 +150,16 @@ namespace Auction.Controllers
         {
             if (lot == null)
             {
-                throw new ArgumentNullException("lot");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ModelState.Remove("Image");
             if (!ModelState.IsValid)
             {
+                return View(lot);
+            }
+            if (!IsLotNameUnique(lot))
+            {
+                ModelState.AddModelError("", "Same name is already used");
                 return View(lot);
             }
             db.Entry(lot).State = EntityState.Modified;

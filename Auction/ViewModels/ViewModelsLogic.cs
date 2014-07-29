@@ -13,11 +13,11 @@ namespace Auction.ViewModels
         public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel(ApplicationDbContext db)
         {
             var lotsAndStakes = (from lot in db.Lots
-                                 join stake in db.Stakes on lot.LotId equals stake.LotId into joinedLotsAndStakes
+                                 join stake in db.Stakes on lot.Id equals stake.LotId into joinedLotsAndStakes
                                  from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
                                  select new LotViewModel()
                                  {
-                                     LotId = lot.LotId,
+                                     LotId = lot.Id,
                                      Name = lot.Name,
                                      Description = lot.Description,
                                      ImagePath = lot.ImagePath,

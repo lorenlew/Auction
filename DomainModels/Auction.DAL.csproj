@@ -60,13 +60,11 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Attributes\FileSizeAttribute.cs" />
     <Compile Include="Attributes\FileTypesAttribute.cs" />
+    <Compile Include="DomainModels\Entity.cs" />
     <Compile Include="DomainModels\IdentityModels.cs" />
     <Compile Include="DomainModels\Lot.cs" />
     <Compile Include="DomainModels\Stake.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

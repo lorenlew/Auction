@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Auction.DAL.DomainModels
 {
-    public class Stake
+    public class Stake : Entity
     {
-        public int StakeId { get; set; }
-
         [Display(Name = "Current stake")]
         public int CurrentStake { get; set; }
 

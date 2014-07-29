@@ -15,7 +15,7 @@ namespace Auction.DAL.Attributes
 
         public override bool IsValid(object value)
         {
-            if (value == null) throw new ArgumentNullException("value");
+            if (value == null) return true;
 
             var httpPostedFileBase = value as HttpPostedFileBase;
             return httpPostedFileBase != null && httpPostedFileBase.ContentLength <= _maxSize;

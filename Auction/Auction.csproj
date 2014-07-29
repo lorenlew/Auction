@@ -208,6 +208,10 @@
     <Compile Include="Migrations\201407272032070_isSold.Designer.cs">
       <DependentUpon>201407272032070_isSold.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407290941241_IdChange.cs" />
+    <Compile Include="Migrations\201407290941241_IdChange.Designer.cs">
+      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\ViewModelsLogic.cs" />
@@ -320,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407272032070_isSold.resx">
       <DependentUpon>201407272032070_isSold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407290941241_IdChange.resx">
+      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

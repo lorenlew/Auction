@@ -6,14 +6,11 @@ using Auction.DAL.Attributes;
 
 namespace Auction.DAL.DomainModels
 {
-    public class Lot
+    public class Lot : Entity
     {
-        public int LotId { get; set; }
-
         [Display(Name = "Lot name")]
         [Required(ErrorMessage = "Enter lot name")]
         [StringLength(100)]
-        [Index(IsUnique = true)]
         public string Name { get; set; }
 
         [Display(Name = "Lot description")]
