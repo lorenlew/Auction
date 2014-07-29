@@ -5,37 +5,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
 using Auction.DAL.Migrations;
+using Auction.Domain.Models;
 using Auction.Interfaces;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
 
 namespace Auction.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private bool disposed = false;
+        private bool _disposed;
 
-        private readonly ApplicationDbContext context = new ApplicationDbContext();
+        private ApplicationDbContext _context;
 
-        private IUserRepository userRepository;
+        private UserManager<ApplicationUser> _userManager;
 
-        private IRoleRepository roleRepository;
+        private IUserRepository _userRepository;
 
-        private IRepository<Lot> lotRepository;
+        private IRoleRepository _roleRepository;
 
-        private IRepository<Stake> stakeRepository;
+        private IRepository<Lot> _lotRepository;
 
+        private IRepository<Stake> _stakeRepository;
 
         public ApplicationDbContext Context
         {
-            get { return context; }
+            get { return _context; }
+        }
+        public UserManager<ApplicationUser> UserManager
+        {
+            get { return _userManager; }
         }
 
         public IUserRepository UserRepository
         {
             get
             {
-                return userRepository ?? (userRepository = new UserRepository(context));
+                return _userRepository ?? (_userRepository = new UserRepository(_context));
             }
         }
 
@@ -43,7 +51,7 @@ namespace Auction.Repositories
         {
             get
             {
-                return roleRepository ?? (roleRepository = new RoleRepository(context));
+                return _roleRepository ?? (_roleRepository = new RoleRepository(_context));
             }
         }
 
@@ -51,7 +59,7 @@ namespace Auction.Repositories
         {
             get
             {
-                return lotRepository ?? (lotRepository = new BaseRepository<Lot>(context));
+                return _lotRepository ?? (_lotRepository = new BaseRepository<Lot>(_context));
             }
         }
 
@@ -59,33 +67,44 @@ namespace Auction.Repositories
         {
             get
             {
-                return stakeRepository ?? (stakeRepository = new BaseRepository<Stake>(context));
+                return _stakeRepository ?? (_stakeRepository = new BaseRepository<Stake>(_context));
             }
+        }
+
+        private void Init()
+        {
+            var dbContext = new ApplicationDbContext();
+            _context = _context ?? dbContext;
+            var userStore = new UserStore<ApplicationUser>(dbContext as DbContext) as IUserStore<ApplicationUser>;
+            _userManager = new UserManager<ApplicationUser>(userStore);
         }
 
         public UnitOfWork()
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            Init();
         }
 
         void IUnitOfWork.Save()
         {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (_disposed)
             {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
+                return;
             }
-            this.disposed = true;
+            if (disposing)
+            {
+                _context.Dispose();
+                _userManager.Dispose();
+            }
+            _disposed = true;
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

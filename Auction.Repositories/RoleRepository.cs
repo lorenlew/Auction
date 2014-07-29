@@ -13,24 +13,25 @@ namespace Auction.Repositories
 {
     public class RoleRepository : IRoleRepository
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
-        private DbSet<IdentityRole> dbSet;
+        private readonly DbSet<IdentityRole> _dbSet;
 
         public RoleRepository(ApplicationDbContext context)
         {
-            this.context = context;
-            dbSet = context.Set<IdentityRole>();
+            if (context == null) return;
+            _context = context;
+            _dbSet = context.Set<IdentityRole>();
         }
 
         void IRoleRepository.Create(IdentityRole entity)
         {
-            dbSet.Add(entity);
+            _dbSet.Add(entity);
         }
 
-        IEnumerable<IdentityRole> IRoleRepository.Read(Expression<Func<IdentityRole, bool>> filter = null, Func<IQueryable<IdentityRole>, IOrderedQueryable<IdentityRole>> orderBy = null, string includeProperties = "")
+        IEnumerable<IdentityRole> IRoleRepository.Read(Expression<Func<IdentityRole, bool>> filter, Func<IQueryable<IdentityRole>, IOrderedQueryable<IdentityRole>> orderBy, string includeProperties)
         {
-            IQueryable<IdentityRole> query = dbSet;
+            IQueryable<IdentityRole> query = _dbSet;
 
             if (filter != null)
                 query = query.Where(filter);
@@ -45,28 +46,28 @@ namespace Auction.Repositories
 
         IdentityRole IRoleRepository.ReadById(object id)
         {
-            return dbSet.Find(id);
+            return _dbSet.Find(id);
         }
 
         void IRoleRepository.Update(IdentityRole entity)
         {
-            dbSet.Attach(entity);
-            context.Entry(entity).State = EntityState.Modified;
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         void IRoleRepository.Delete(object id)
         {
-            IdentityRole entity = dbSet.Find(id);
+            IdentityRole entity = _dbSet.Find(id);
             Delete(entity);
         }
 
         private void Delete(IdentityRole entity)
         {
-            if (context.Entry(entity).State == EntityState.Detached)
+            if (_context.Entry(entity).State == EntityState.Detached)
             {
-                dbSet.Attach(entity);
+                _dbSet.Attach(entity);
             }
-            dbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
     }
 }

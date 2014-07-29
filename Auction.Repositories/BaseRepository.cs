@@ -6,31 +6,32 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
 using Auction.Interfaces;
 
 namespace Auction.Repositories
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
-        private DbSet<TEntity> dbSet;
+        private readonly DbSet<TEntity> _dbSet;
 
         public BaseRepository(ApplicationDbContext context)
         {
-            this.context = context;
-            dbSet = context.Set<TEntity>();
+            if (context == null) return;
+            _context = context;
+            _dbSet = context.Set<TEntity>();
         }
 
         void IRepository<TEntity>.Create(TEntity entity)
         {
-            dbSet.Add(entity);
+            _dbSet.Add(entity);
         }
 
-        IEnumerable<TEntity> IRepository<TEntity>.Read(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, String includeProperties = "")
+        IEnumerable<TEntity> IRepository<TEntity>.Read(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, String includeProperties)
         {
-            IQueryable<TEntity> query = dbSet;
+            IQueryable<TEntity> query = _dbSet;
 
             if (filter != null)
                 query = query.Where(filter);
@@ -45,22 +46,22 @@ namespace Auction.Repositories
 
         TEntity IRepository<TEntity>.ReadById(object id)
         {
-            return dbSet.Find(id);
+            return _dbSet.Find(id);
         }
 
         void IRepository<TEntity>.Update(TEntity entity)
         {
-            dbSet.Attach(entity);
-            context.Entry(entity).State = EntityState.Modified;
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         void IRepository<TEntity>.Delete(TEntity entity)
         {
-            if (context.Entry(entity).State == EntityState.Detached)
+            if (_context.Entry(entity).State == EntityState.Detached)
             {
-                dbSet.Attach(entity);
+                _dbSet.Attach(entity);
             }
-            dbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
     }
 }

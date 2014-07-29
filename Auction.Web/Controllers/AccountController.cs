@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
+using Auction.Repositories;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -13,19 +14,18 @@ namespace Auction.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private ApplicationUserManager _userManager;
+        private UserManager<ApplicationUser> _userManager;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager)
+        public AccountController(UnitOfWork uow)
         {
-            if (userManager == null) throw new ArgumentNullException("userManager");
-            UserManager = userManager;
+            _userManager = uow.UserManager;
         }
 
-        public ApplicationUserManager UserManager
+        public UserManager<ApplicationUser> UserManager
         {
             get
             {

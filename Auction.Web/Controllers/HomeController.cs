@@ -1,6 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
+using Auction.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -8,11 +10,11 @@ namespace Auction.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationDbContext db;
+        private readonly UnitOfWork _uow;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(UnitOfWork uow)
         {
-            db = context;
+            _uow = uow;
         }
         public ActionResult Index()
         {
@@ -20,10 +22,16 @@ namespace Auction.Web.Controllers
         }
         public ActionResult UserInfo()
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            var currentUser = userManager.FindByName(User.Identity.Name);
+            var currentUser = _uow.UserManager.FindByName(User.Identity.Name);
             return View(currentUser);
         }
-
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _uow.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

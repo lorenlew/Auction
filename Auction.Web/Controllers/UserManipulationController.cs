@@ -1,6 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Net;
+using System.Web.Mvc;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
+using Auction.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -8,20 +10,18 @@ namespace Auction.Web.Controllers
 {
     public class UserManipulationController : Controller
     {
-        private ApplicationDbContext db;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UnitOfWork _uow;
 
-        public UserManipulationController(ApplicationDbContext context)
+        public UserManipulationController( UnitOfWork uow)
         {
-            db = context;
-            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            _uow = uow;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
-            var users = db.Users;
-            ViewBag.userManager = _userManager;
+            var users = _uow.UserRepository.Read();
+            ViewBag.userManager = _uow.UserManager;
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_UserManipulation", users);
@@ -34,24 +34,28 @@ namespace Auction.Web.Controllers
         {
             if (name == null)
             {
-                return UserManagement(); ;
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var targetUserId = GetUserId(name, _userManager);
-            var isTargetUserModerator = _userManager.IsInRole(targetUserId, "Moderator");
+            var targetUserId = GetUserId(name);
+            if (targetUserId == null)
+            {
+                return HttpNotFound();
+            }
+            var isTargetUserModerator = _uow.UserManager.IsInRole(targetUserId, "Moderator");
             if (isTargetUserModerator)
             {
-                _userManager.RemoveFromRole(targetUserId, "Moderator");
+                _uow.UserManager.RemoveFromRole(targetUserId, "Moderator");
             }
             else
             {
-                _userManager.AddToRole(targetUserId, "Moderator");
+                _uow.UserManager.AddToRole(targetUserId, "Moderator");
             }
             return UserManagement();
         }
 
-        private string GetUserId(string name, UserManager<ApplicationUser> userManager)
+        private string GetUserId(string name)
         {
-            var targetUser = userManager.FindByName(name);
+            var targetUser = _uow.UserManager.FindByName(name);
             var targetUserId = targetUser.Id;
             return targetUserId;
         }
@@ -61,20 +65,20 @@ namespace Auction.Web.Controllers
         {
             if (name == null)
             {
-                return UserManagement();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var targetUser = _userManager.FindByName(name);
+            var targetUser = _uow.UserManager.FindByName(name);
             if (targetUser == null)
             {
-                return UserManagement();
+                return HttpNotFound();
             }
-            var isUserPerformingActionModerator = _userManager.IsInRole(User.Identity.GetUserId(), "Moderator");
-            var isTargetUserModerator = _userManager.IsInRole(targetUser.Id, "Moderator");
+            var isUserPerformingActionModerator = _uow.UserManager.IsInRole(User.Identity.GetUserId(), "Moderator");
+            var isTargetUserModerator = _uow.UserManager.IsInRole(targetUser.Id, "Moderator");
 
             if (User.IsInRole("Administrator") || (isUserPerformingActionModerator && !isTargetUserModerator))
             {
                 targetUser.IsBanned = !targetUser.IsBanned;
-                _userManager.Update(targetUser);
+                _uow.UserManager.Update(targetUser);
             }
             return UserManagement();
         }
@@ -83,6 +87,7 @@ namespace Auction.Web.Controllers
         {
             if (disposing)
             {
+                _uow.Dispose();
             }
             base.Dispose(disposing);
         }

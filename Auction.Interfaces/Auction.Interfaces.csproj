@@ -63,6 +63,10 @@
       <Project>{4a1b95ef-445a-46b1-9a2a-fff953cd5b3b}</Project>
       <Name>Auction.DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Auction.Domain\Auction.Domain.csproj">
+      <Project>{fd1e42c4-dd7c-4110-b76a-bee9c976fd89}</Project>
+      <Name>Auction.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

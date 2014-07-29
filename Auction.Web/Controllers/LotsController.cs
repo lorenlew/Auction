@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 

@@ -1,5 +1,5 @@
 using System.Data.Entity.Migrations;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -10,13 +10,13 @@ namespace Auction.DAL.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            ContextKey = "Auction.Models.ApplicationDbContext";
+            ContextKey = "Auction.DAL.ApplicationDbContext";
         }
 
         protected override void Seed(ApplicationDbContext context)
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            var roleManager = new RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
             if (!roleManager.RoleExists("Administrator"))
             {

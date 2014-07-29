@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Auction.DAL;
-using Auction.DAL.DomainModels;
+using Auction.Domain.Models;
 using Microsoft.AspNet.Identity;
 
 namespace Auction.Web.ViewModels

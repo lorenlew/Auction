@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
-using Auction.DAL.Attributes;
+using Auction.Domain.Attributes;
 
-namespace Auction.DAL.DomainModels
+namespace Auction.Domain.Models
 {
     public class Lot : Entity
     {
