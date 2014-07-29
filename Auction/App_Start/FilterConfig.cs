@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Auction
+namespace Auction.Web
 {
     public class FilterConfig
     {

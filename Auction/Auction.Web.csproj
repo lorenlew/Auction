@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Auction</RootNamespace>
-    <AssemblyName>Auction</AssemblyName>
+    <RootNamespace>Auction.Web</RootNamespace>
+    <AssemblyName>Auction.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -180,39 +180,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201407241040409_Reinitilize.cs" />
-    <Compile Include="Migrations\201407241040409_Reinitilize.Designer.cs">
-      <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407250940201_fixStakeTimeout.cs" />
-    <Compile Include="Migrations\201407250940201_fixStakeTimeout.Designer.cs">
-      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407261519186_isBanned.cs" />
-    <Compile Include="Migrations\201407261519186_isBanned.Designer.cs">
-      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407270809292_ImageFile.cs" />
-    <Compile Include="Migrations\201407270809292_ImageFile.Designer.cs">
-      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407271028417_ImagePathBack.cs" />
-    <Compile Include="Migrations\201407271028417_ImagePathBack.Designer.cs">
-      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407271136317_UniqueLotName.cs" />
-    <Compile Include="Migrations\201407271136317_UniqueLotName.Designer.cs">
-      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407272032070_isSold.cs" />
-    <Compile Include="Migrations\201407272032070_isSold.Designer.cs">
-      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201407290941241_IdChange.cs" />
-    <Compile Include="Migrations\201407290941241_IdChange.Designer.cs">
-      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\ViewModelsLogic.cs" />
     <Compile Include="ViewModels\LotViewModel.cs" />
@@ -302,32 +269,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201407241040409_Reinitilize.resx">
-      <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407250940201_fixStakeTimeout.resx">
-      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407261519186_isBanned.resx">
-      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407270809292_ImageFile.resx">
-      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407271028417_ImagePathBack.resx">
-      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407271136317_UniqueLotName.resx">
-      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407272032070_isSold.resx">
-      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201407290941241_IdChange.resx">
-      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainModels\Auction.DAL.csproj">

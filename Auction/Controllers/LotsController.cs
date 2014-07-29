@@ -9,10 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using Auction.DAL;
 using Auction.DAL.DomainModels;
-using Auction.ViewModels;
+using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
 
-namespace Auction.Controllers
+namespace Auction.Web.Controllers
 {
     public class LotsController : Controller
     {

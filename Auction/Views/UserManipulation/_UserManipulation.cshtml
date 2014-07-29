@@ -41,20 +41,20 @@
             if (!item.IsBanned)
             {
                 @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
-                                {
-                                    UpdateTargetId = "UsersAndRoles",
-                                    InsertionMode = InsertionMode.Replace,
-                                    HttpMethod = "Post",
-                                }, new { @class = "btn btn-success btn-block" })
+                {
+                    UpdateTargetId = "UsersAndRoles",
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "Post",
+                }, new { @class = "btn btn-success btn-block" })
             }
             else
             {
                 @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
-                                {
-                                    UpdateTargetId = "UsersAndRoles",
-                                    InsertionMode = InsertionMode.Replace,
-                                    HttpMethod = "Post",
-                                }, new { @class = "btn btn-default btn-block" })
+                {
+                    UpdateTargetId = "UsersAndRoles",
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "Post",
+                }, new { @class = "btn btn-default btn-block" })
             }
 
         }

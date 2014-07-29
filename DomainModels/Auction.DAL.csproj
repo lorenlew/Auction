@@ -64,11 +64,70 @@
     <Compile Include="DomainModels\IdentityModels.cs" />
     <Compile Include="DomainModels\Lot.cs" />
     <Compile Include="DomainModels\Stake.cs" />
+    <Compile Include="Migrations\201407241040409_Reinitilize.cs" />
+    <Compile Include="Migrations\201407241040409_Reinitilize.Designer.cs">
+      <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407250940201_fixStakeTimeout.cs" />
+    <Compile Include="Migrations\201407250940201_fixStakeTimeout.Designer.cs">
+      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407261519186_isBanned.cs" />
+    <Compile Include="Migrations\201407261519186_isBanned.Designer.cs">
+      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407270809292_ImageFile.cs" />
+    <Compile Include="Migrations\201407270809292_ImageFile.Designer.cs">
+      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407271028417_ImagePathBack.cs" />
+    <Compile Include="Migrations\201407271028417_ImagePathBack.Designer.cs">
+      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407271136317_UniqueLotName.cs" />
+    <Compile Include="Migrations\201407271136317_UniqueLotName.Designer.cs">
+      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407272032070_isSold.cs" />
+    <Compile Include="Migrations\201407272032070_isSold.Designer.cs">
+      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407290941241_IdChange.cs" />
+    <Compile Include="Migrations\201407290941241_IdChange.Designer.cs">
+      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201407241040409_Reinitilize.resx">
+      <DependentUpon>201407241040409_Reinitilize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407250940201_fixStakeTimeout.resx">
+      <DependentUpon>201407250940201_fixStakeTimeout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407261519186_isBanned.resx">
+      <DependentUpon>201407261519186_isBanned.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407270809292_ImageFile.resx">
+      <DependentUpon>201407270809292_ImageFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407271028417_ImagePathBack.resx">
+      <DependentUpon>201407271028417_ImagePathBack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407271136317_UniqueLotName.resx">
+      <DependentUpon>201407271136317_UniqueLotName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407272032070_isSold.resx">
+      <DependentUpon>201407272032070_isSold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407290941241_IdChange.resx">
+      <DependentUpon>201407290941241_IdChange.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

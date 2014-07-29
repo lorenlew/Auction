@@ -6,7 +6,7 @@ using Auction.DAL;
 using Auction.DAL.DomainModels;
 using Microsoft.AspNet.Identity;
 
-namespace Auction.ViewModels
+namespace Auction.Web.ViewModels
 {
     public class ViewModelsLogic
     {

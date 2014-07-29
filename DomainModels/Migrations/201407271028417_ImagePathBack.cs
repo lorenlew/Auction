@@ -1,8 +1,7 @@
-namespace Auction.Migrations
+using System.Data.Entity.Migrations;
+
+namespace Auction.DAL.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class ImagePathBack : DbMigration
     {
         public override void Up()

@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Web.Mvc;
 using Auction.DAL;
-using Auction.ViewModels;
+using Auction.Web.ViewModels;
 
-namespace Auction.Controllers
+namespace Auction.Web.Controllers
 {
     public class StakesController : Controller
     {
@@ -25,7 +25,7 @@ namespace Auction.Controllers
             var currentLot = ViewModelsLogic.GetCurrentLot((int)id, db);
             if (currentLot == null)
             {
-                return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
+                return HttpNotFound();
             }
             if (!currentLot.IsAvailable)
             {
@@ -34,7 +34,7 @@ namespace Auction.Controllers
             var currentStake = ViewModelsLogic.GetCurrentStake((int)id, stakeIncrease, currentLot);
             if (currentStake == null)
             {
-                return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
+                return HttpNotFound();
             }
             db.Stakes.Add(currentStake);
             db.SaveChanges();
