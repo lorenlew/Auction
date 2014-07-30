@@ -1,7 +1,5 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Auction.DAL;
-using Auction.Domain.Models;
 using Auction.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;

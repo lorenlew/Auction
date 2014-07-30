@@ -29,7 +29,7 @@ namespace Auction.Repositories
             _dbSet.Add(entity);
         }
 
-        IEnumerable<TEntity> IRepository<TEntity>.Read(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, String includeProperties)
+        IQueryable<TEntity> IRepository<TEntity>.Read(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, String includeProperties)
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -39,9 +39,9 @@ namespace Auction.Repositories
             query = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 
             if (orderBy != null)
-                return orderBy(query).ToList();
+                return orderBy(query).ToList().AsQueryable();
 
-            return query;
+            return query.AsQueryable();
         }
 
         TEntity IRepository<TEntity>.ReadById(object id)

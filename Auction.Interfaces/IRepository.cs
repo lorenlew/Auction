@@ -12,7 +12,7 @@ namespace Auction.Interfaces
     {
         void Create(TEntity entity);
 
-        IEnumerable<TEntity> Read(Expression<Func<TEntity, bool>> filter = null,
+        IQueryable<TEntity> Read(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, String includeProperties = "");
 
         TEntity ReadById(Object id);

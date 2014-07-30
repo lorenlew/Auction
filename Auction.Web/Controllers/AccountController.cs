@@ -20,9 +20,9 @@ namespace Auction.Web.Controllers
         {
         }
 
-        public AccountController(UnitOfWork uow)
+        public AccountController(ApplicationUserManager userManager)
         {
-            _userManager = uow.UserManager;
+            UserManager = userManager;
         }
 
         public UserManager<ApplicationUser> UserManager
@@ -51,7 +51,7 @@ namespace Auction.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login( LoginViewModel model,  string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
@@ -170,7 +170,7 @@ namespace Auction.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword( ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
@@ -219,7 +219,7 @@ namespace Auction.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword( ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
@@ -414,7 +414,7 @@ namespace Auction.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
             {

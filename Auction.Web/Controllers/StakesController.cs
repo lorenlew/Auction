@@ -1,17 +1,17 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Auction.DAL;
+using Auction.Repositories;
 using Auction.Web.ViewModels;
 
 namespace Auction.Web.Controllers
 {
     public class StakesController : Controller
     {
-        private ApplicationDbContext db;
+        private readonly UnitOfWork _uow;
 
-        public StakesController(ApplicationDbContext context)
+        public StakesController(UnitOfWork uow)
         {
-            db = context;
+            _uow = uow;
         }
 
         [Authorize]
@@ -22,7 +22,7 @@ namespace Auction.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             stakeIncrease = stakeIncrease ?? 1.05;
-            var currentLot = ViewModelsLogic.GetCurrentLot((int)id, db);
+            var currentLot = ViewModelsLogic.GetCurrentLot((int)id, _uow);
             if (currentLot == null)
             {
                 return HttpNotFound();
@@ -36,8 +36,8 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            db.Stakes.Add(currentStake);
-            db.SaveChanges();
+            _uow.StakeRepository.Create(currentStake);
+            _uow.Save();
             return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
         }
 
@@ -45,7 +45,7 @@ namespace Auction.Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _uow.Dispose();
             }
             base.Dispose(disposing);
         }

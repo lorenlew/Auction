@@ -1,8 +1,9 @@
-using System.Data.Entity.Migrations;
-
 namespace Auction.DAL.Migrations
 {
-    public partial class Reinitilize : DbMigration
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class reCreate : DbMigration
     {
         public override void Up()
         {
@@ -10,27 +11,28 @@ namespace Auction.DAL.Migrations
                 "dbo.Lots",
                 c => new
                     {
-                        LotId = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false, identity: true),
                         Name = c.String(nullable: false, maxLength: 100),
                         Description = c.String(nullable: false, maxLength: 500),
-                        ImagePath = c.String(nullable: false),
+                        ImagePath = c.String(),
                         HoursDuration = c.Int(nullable: false),
                         InitialStake = c.Int(nullable: false),
+                        IsSold = c.Boolean(nullable: false),
                     })
-                .PrimaryKey(t => t.LotId);
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Stakes",
                 c => new
                     {
-                        StakeId = c.Int(nullable: false, identity: true),
-                        HoursForAuctionEnd = c.Int(nullable: false),
+                        Id = c.Int(nullable: false, identity: true),
                         CurrentStake = c.Int(nullable: false),
                         DateOfStake = c.DateTime(nullable: false),
+                        StakeTimeout = c.DateTime(nullable: false),
                         LotId = c.Int(nullable: false),
                         ApplicationUserId = c.String(nullable: false, maxLength: 128),
                     })
-                .PrimaryKey(t => t.StakeId)
+                .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Lots", t => t.LotId, cascadeDelete: true)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId, cascadeDelete: true)
                 .Index(t => t.LotId)
@@ -66,6 +68,7 @@ namespace Auction.DAL.Migrations
                         Id = c.String(nullable: false, maxLength: 128),
                         FirstName = c.String(maxLength: 30),
                         LastName = c.String(maxLength: 30),
+                        IsBanned = c.Boolean(nullable: false),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),

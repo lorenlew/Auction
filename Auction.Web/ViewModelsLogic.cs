@@ -4,16 +4,19 @@ using System.Linq;
 using System.Web;
 using Auction.DAL;
 using Auction.Domain.Models;
+using Auction.Repositories;
+using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
+using Ninject.Infrastructure.Language;
 
-namespace Auction.Web.ViewModels
+namespace Auction.Web
 {
     public class ViewModelsLogic
     {
-        public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel(ApplicationDbContext db)
+        public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel(UnitOfWork uow)
         {
-            var lotsAndStakes = (from lot in db.Lots
-                                 join stake in db.Stakes on lot.Id equals stake.LotId into joinedLotsAndStakes
+            var lotsAndStakes = (from lot in uow.LotRepository.Read()
+                                 join stake in uow.StakeRepository.Read() on lot.Id equals stake.LotId into joinedLotsAndStakes
                                  from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
                                  select new LotViewModel()
                                  {
@@ -31,16 +34,16 @@ namespace Auction.Web.ViewModels
                                      IsAvailable = (bool?)(jLotsAndStakes.StakeTimeout > DateTime.Now) ?? true
                                  });
 
-            var groupedLotStakes = (from lots in lotsAndStakes
+            var groupedLotStakes = (from lots in lotsAndStakes 
                                     group lots by new { lots.LotId } into grp
                                     let firstOrDefault = grp.OrderByDescending(p => p.LastDateOfStake).FirstOrDefault()
                                     select firstOrDefault).ToList();
             return groupedLotStakes;
         }
 
-        public static IEnumerable<LotViewModel> GetAvailableLotsAndStakesViewModel(ApplicationDbContext db)
+        public static IEnumerable<LotViewModel> GetAvailableLotsAndStakesViewModel(UnitOfWork uow)
         {
-            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(db)
+            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(uow)
                                           where !lots.IsSold
                                           orderby lots.Name
                                           select lots).ToList();
@@ -48,18 +51,18 @@ namespace Auction.Web.ViewModels
             return availableLotsAndStakes;
         }
 
-        public static IEnumerable<LotViewModel> GetSoldLotsAndStakesViewModel(ApplicationDbContext db)
+        public static IEnumerable<LotViewModel> GetSoldLotsAndStakesViewModel(UnitOfWork uow)
         {
-            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(db)
+            var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(uow)
                                           where lots.IsSold
                                           select lots).ToList();
 
             return availableLotsAndStakes;
         }
 
-        public static LotViewModel GetCurrentLot(int id, ApplicationDbContext db)
+        public static LotViewModel GetCurrentLot(int id, UnitOfWork uow)
         {
-            var currentLot = (from lots in GetAvailableLotsAndStakesViewModel(db)
+            var currentLot = (from lots in GetAvailableLotsAndStakesViewModel(uow)
                               where lots.LotId == id
                               select lots).SingleOrDefault();
             return currentLot;

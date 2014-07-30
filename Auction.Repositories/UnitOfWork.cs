@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Auction.DAL;
 using Auction.DAL.Migrations;
 using Auction.Domain.Models;
@@ -85,7 +81,7 @@ namespace Auction.Repositories
             Init();
         }
 
-        void IUnitOfWork.Save()
+        public void Save()
         {
             _context.SaveChanges();
         }
@@ -109,5 +105,11 @@ namespace Auction.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public void DisableValidationOnSave()
+        {
+            _context.Configuration.ValidateOnSaveEnabled = false;
+        }
+
     }
 }
