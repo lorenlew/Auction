@@ -1,7 +1,12 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Web.Mvc;
+using Auction.Domain.Models;
 using Auction.Interfaces;
 using Auction.Repositories;
+using Auction.Web.ViewModels;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -19,13 +24,14 @@ namespace Auction.Web.Controllers
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
-            var users = _uow.UserRepository.Read();
+            var users = _uow.UserRepository.Read().ToList();
             ViewBag.userManager = _uow.UserManager;
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_UserManipulation", users);
             }
-            return View(users);
+            var usersViewModel = Mapper.Map<IList<ApplicationUser>, IList<ApplicationUserViewModel>>(users);
+            return View(usersViewModel);
         }
 
         [Authorize(Roles = "Administrator")]

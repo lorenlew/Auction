@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Auction.Web.ViewModels.LotViewModel>
+﻿@model IEnumerable<Auction.Web.ViewModels.LotStakeViewModel>
 
 @{
     ViewBag.Title = "Stakes";
@@ -13,7 +13,7 @@
     <p class="no-shadow">
         @Html.ActionLink("Add new lot", "Create", null, new { @class = "btn btn-info block-frame", title = "" })
     </p>
-}     
+}
 
 <div id="lotsAndStakes">
     @Html.Partial("_lotsAndStakes", Model)

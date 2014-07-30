@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
+using Auction.Domain.Models;
 using Auction.Interfaces;
 using Auction.Repositories;
+using Auction.Web.ViewModels;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 
 namespace Auction.Web.Controllers
@@ -21,7 +25,8 @@ namespace Auction.Web.Controllers
         public ActionResult UserInfo()
         {
             var currentUser = _uow.UserManager.FindByName(User.Identity.Name);
-            return View(currentUser);
+            var applicationUserViewModel = Mapper.Map<ApplicationUser, ApplicationUserViewModel>(currentUser);
+            return View(applicationUserViewModel);
         }
         protected override void Dispose(bool disposing)
         {

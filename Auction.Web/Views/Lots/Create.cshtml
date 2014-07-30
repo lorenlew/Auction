@@ -1,4 +1,4 @@
-﻿@model Auction.Domain.Models.Lot
+﻿@model Auction.Web.ViewModels.LotViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -32,8 +32,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Image, new { @class = "form-control", type = "file" } )
-                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })   
+                @Html.TextBoxFor(model => model.Image, new { @class = "form-control", type = "file" })
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
             </div>
         </div>
 

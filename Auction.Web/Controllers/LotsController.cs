@@ -11,6 +11,7 @@ using Auction.Domain.Models;
 using Auction.Interfaces;
 using Auction.Repositories;
 using Auction.Web.ViewModels;
+using AutoMapper;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace Auction.Web.Controllers
@@ -56,7 +57,7 @@ namespace Auction.Web.Controllers
             }
         }
 
-        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotViewModel> notReportedStakes)
+        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotStakeViewModel> notReportedStakes)
         {
             var applicationUserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             try
@@ -88,7 +89,7 @@ namespace Auction.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Moderator")]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Image,HoursDuration,InitialStake")] Lot lot)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,Image,HoursDuration,InitialStake")] LotViewModel lot)
         {
             if (lot == null)
             {
@@ -114,17 +115,18 @@ namespace Auction.Web.Controllers
             string physicalPath = HttpContext.Server.MapPath(virtualPath);
             lot.ImagePath = virtualPath;
 
-            _uow.LotRepository.Create(lot);
+            var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
+            _uow.LotRepository.Create(lotDomain);
             _uow.Save();
             lot.Image.SaveAs(physicalPath);
             return RedirectToAction("Index");
         }
 
-        private bool IsLotNameUsed(Lot lot)
+        private bool IsLotNameUsed(LotViewModel lot)
         {
             var lotsWithSameName = from l in _uow.LotRepository.Read()
-                             where l.Name == lot.Name && lot.Id != l.Id
-                             select l;
+                                   where l.Name == lot.Name && lot.Id != l.Id
+                                   select l;
             var isNameUsed = lotsWithSameName.Any();
             return isNameUsed;
         }
@@ -141,13 +143,14 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(lot);
+            var lotViewModel = Mapper.Map<Lot, LotViewModel>(lot);
+            return View(lotViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Moderator")]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath,HoursDuration,InitialStake")] Lot lot)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath,HoursDuration,InitialStake")] LotViewModel lot)
         {
             if (lot == null)
             {
@@ -156,6 +159,7 @@ namespace Auction.Web.Controllers
             ModelState.Remove("Image");
             if (!ModelState.IsValid)
             {
+
                 return View(lot);
             }
             if (IsLotNameUsed(lot))
@@ -163,7 +167,8 @@ namespace Auction.Web.Controllers
                 ModelState.AddModelError("", "Same name is already used");
                 return View(lot);
             }
-            _uow.LotRepository.Update(lot);
+            var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
+            _uow.LotRepository.Update(lotDomain);
             _uow.DisableValidationOnSave();
             _uow.Save();
             return RedirectToAction("Index");

@@ -176,6 +176,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\MapperConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -189,9 +190,13 @@
     </Compile>
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModelsLogic.cs" />
-    <Compile Include="ViewModels\LotViewModel.cs" />
+    <Compile Include="ViewModels\ApplicationUserViewModel.cs" />
+    <Compile Include="ViewModels\Entity.cs" />
+    <Compile Include="ViewModels\LotStakeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\LotViewModel.cs" />
+    <Compile Include="ViewModels\StakeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -254,7 +259,6 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Lots\Create.cshtml" />
-    <Content Include="Views\Lots\Delete.cshtml" />
     <Content Include="Views\Lots\Edit.cshtml" />
     <Content Include="Views\Lots\Index.cshtml" />
     <Content Include="Views\Home\UserInfo.cshtml" />

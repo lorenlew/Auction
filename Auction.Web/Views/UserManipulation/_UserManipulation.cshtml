@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<Auction.Domain.Models.ApplicationUser>  
+@model IEnumerable<Auction.Web.ViewModels.ApplicationUserViewModel>
 
 <h1 class="text-center">
     @if (User.IsInRole("Administrator"))
@@ -8,7 +8,7 @@
 }
     else
     {
-        @:Current role -<span class ="text-danger"> Moderator</span>
+        @:Current role -<span class="text-danger"> Moderator</span>
 }
 </h1>
 
@@ -33,7 +33,7 @@
 
                     </td>
                     <td class="fixed-cell">
-                        @*You can ban if you are admin or if you are moderator and target is not admin or moderator*@    
+                        @*You can ban if you are admin or if you are moderator and target is not admin or moderator*@
                         @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator")
                              && !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator")
                              || User.IsInRole("Administrator"))

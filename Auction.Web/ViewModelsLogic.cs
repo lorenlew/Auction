@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Auction.DAL;
 using Auction.Domain.Models;
 using Auction.Interfaces;
-using Auction.Repositories;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
-using Ninject.Infrastructure.Language;
 
 namespace Auction.Web
 {
     public class ViewModelsLogic
     {
-        public static IEnumerable<LotViewModel> GetLotsAndStakesViewModel(IUnitOfWork uow)
+        public static IEnumerable<LotStakeViewModel> GetLotsAndStakesViewModel(IUnitOfWork uow)
         {
             var lotsAndStakes = (from lot in uow.LotRepository.Read()
                                  join stake in uow.StakeRepository.Read() on lot.Id equals stake.LotId into joinedLotsAndStakes
                                  from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
-                                 select new LotViewModel()
+                                 select new LotStakeViewModel()
                                  {
                                      LotId = lot.Id,
                                      Name = lot.Name,
@@ -42,7 +39,7 @@ namespace Auction.Web
             return groupedLotStakes;
         }
 
-        public static IEnumerable<LotViewModel> GetAvailableLotsAndStakesViewModel(IUnitOfWork uow)
+        public static IEnumerable<LotStakeViewModel> GetAvailableLotsAndStakesViewModel(IUnitOfWork uow)
         {
             var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(uow)
                                           where !lots.IsSold
@@ -52,7 +49,7 @@ namespace Auction.Web
             return availableLotsAndStakes;
         }
 
-        public static IEnumerable<LotViewModel> GetSoldLotsAndStakesViewModel(IUnitOfWork uow)
+        public static IEnumerable<LotStakeViewModel> GetSoldLotsAndStakesViewModel(IUnitOfWork uow)
         {
             var availableLotsAndStakes = (from lots in GetLotsAndStakesViewModel(uow)
                                           where lots.IsSold
@@ -61,7 +58,7 @@ namespace Auction.Web
             return availableLotsAndStakes;
         }
 
-        public static LotViewModel GetCurrentLot(int id, IUnitOfWork uow)
+        public static LotStakeViewModel GetCurrentLot(int id, IUnitOfWork uow)
         {
             var currentLot = (from lots in GetAvailableLotsAndStakesViewModel(uow)
                               where lots.LotId == id
@@ -69,7 +66,7 @@ namespace Auction.Web
             return currentLot;
         }
 
-        public static Stake GetCurrentStake(int id, double? stakeIncrease, LotViewModel currentLot)
+        public static Stake GetCurrentStake(int id, double? stakeIncrease, LotStakeViewModel currentLot)
         {
             if (currentLot == null) throw new ArgumentNullException("currentLot");
             var currentStake = new Stake
