@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
+using Auction.Interfaces;
 using Auction.Repositories;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity.Owin;
@@ -16,9 +17,9 @@ namespace Auction.Web.Controllers
 {
     public class LotsController : Controller
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public LotsController(UnitOfWork uow)
+        public LotsController(IUnitOfWork uow)
         {
             _uow = uow;
         }
@@ -97,7 +98,7 @@ namespace Auction.Web.Controllers
             {
                 return View(lot);
             }
-            if (!IsLotNameUnique(lot))
+            if (IsLotNameUsed(lot))
             {
                 ModelState.AddModelError("", "Same name is already used");
                 return View(lot);
@@ -119,13 +120,13 @@ namespace Auction.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool IsLotNameUnique(Lot lot)
+        private bool IsLotNameUsed(Lot lot)
         {
-            var currentLot = from l in _uow.LotRepository.Read()
-                             where l.Name == lot.Name
+            var lotsWithSameName = from l in _uow.LotRepository.Read()
+                             where l.Name == lot.Name && lot.Id != l.Id
                              select l;
-            var isNameUnique = !currentLot.Any();
-            return isNameUnique;
+            var isNameUsed = lotsWithSameName.Any();
+            return isNameUsed;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -157,7 +158,7 @@ namespace Auction.Web.Controllers
             {
                 return View(lot);
             }
-            if (!IsLotNameUnique(lot))
+            if (IsLotNameUsed(lot))
             {
                 ModelState.AddModelError("", "Same name is already used");
                 return View(lot);

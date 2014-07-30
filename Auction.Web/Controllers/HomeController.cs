@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Auction.Interfaces;
 using Auction.Repositories;
 using Microsoft.AspNet.Identity;
 
@@ -7,9 +8,9 @@ namespace Auction.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public HomeController(UnitOfWork uow)
+        public HomeController(IUnitOfWork uow)
         {
             _uow = uow;
         }

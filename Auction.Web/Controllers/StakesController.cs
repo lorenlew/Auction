@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Web.Mvc;
+using Auction.Interfaces;
 using Auction.Repositories;
 using Auction.Web.ViewModels;
 
@@ -7,9 +8,9 @@ namespace Auction.Web.Controllers
 {
     public class StakesController : Controller
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public StakesController(UnitOfWork uow)
+        public StakesController(IUnitOfWork uow)
         {
             _uow = uow;
         }

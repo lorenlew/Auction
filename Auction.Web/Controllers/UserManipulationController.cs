@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Web.Mvc;
+using Auction.Interfaces;
 using Auction.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -8,9 +9,9 @@ namespace Auction.Web.Controllers
 {
     public class UserManipulationController : Controller
     {
-        private readonly UnitOfWork _uow;
+        private readonly IUnitOfWork _uow;
 
-        public UserManipulationController( UnitOfWork uow)
+        public UserManipulationController(IUnitOfWork uow)
         {
             _uow = uow;
         }
