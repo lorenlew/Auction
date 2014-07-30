@@ -9,12 +9,8 @@ namespace Auction.Domain.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [StringLength(30)]
-        [Display(Name = "First name")]
         public string FirstName { get; set; }
 
-        [StringLength(30)]
-        [Display(Name = "Last name")]
         public string LastName { get; set; }
 
         public bool IsBanned { get; set; }
@@ -23,9 +19,7 @@ namespace Auction.Domain.Models
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
             return userIdentity;
         }
     }

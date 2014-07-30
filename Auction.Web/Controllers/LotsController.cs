@@ -175,21 +175,6 @@ namespace Auction.Web.Controllers
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Lot lot = _uow.LotRepository.ReadById(id);
-            if (lot == null)
-            {
-                return HttpNotFound();
-            }
-            return View(lot);
-        }
-
-        [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult DeleteConfirmed(int id, bool? isMain)
         {
             bool isMainPage = isMain ?? false;

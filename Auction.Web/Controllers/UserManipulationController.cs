@@ -9,6 +9,7 @@ using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject.Infrastructure.Language;
 
 namespace Auction.Web.Controllers
 {
@@ -24,13 +25,13 @@ namespace Auction.Web.Controllers
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
-            var users = _uow.UserRepository.Read().ToList();
+            var users = _uow.UserRepository.Read().ToEnumerable();
             ViewBag.userManager = _uow.UserManager;
+            var usersViewModel = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserViewModel>>(users);
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_UserManipulation", users);
+                return PartialView("_UserManipulation", usersViewModel);
             }
-            var usersViewModel = Mapper.Map<IList<ApplicationUser>, IList<ApplicationUserViewModel>>(users);
             return View(usersViewModel);
         }
 

@@ -18,7 +18,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.InitialStake)
             </th>
-
             <th>
                 @Html.DisplayNameFor(model => model.LastDateOfStake)
             </th>
@@ -36,113 +35,114 @@
                 <th></th>
             }
         </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr class="no-shadow">
-                <td class="lot-cell">
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td class="lot-cell">
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td class="lot-cell">
-                    <img class="img-content" src=@item.ImagePath />
-                </td>
-                <td class="lot-cell">
-                    @Html.DisplayFor(modelItem => item.HoursDuration)
-                </td>
-                <td class="lot-cell">
-                    @Html.DisplayFor(modelItem => item.InitialStake)
-                </td>
-                <td class="stake-cell">
-                    @Html.DisplayFor(modelItem => item.LastDateOfStake)
-                </td>
-                <td class="stake-cell">
-                    @Html.DisplayFor(modelItem => item.StakeTimeout)
-                </td>
-                <td class="stake-cell">
-                    @Html.DisplayFor(modelItem => item.LastStake)
-                </td>
-                <td class="stake-cell">
-                    @if (item.IsAvailable)
-                    {
-                        <span class="btn btn-success fa fa-unlock"></span>
-                    }
-                    else
-                    {
-                        <span class="btn btn-danger fa fa-lock"></span>
-                    }
-                </td>
-
-                <td class="stake-cell">
-                    @if (User.Identity.IsAuthenticated && item.IsAvailable)
-                    {
-                        if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="no-shadow">
+                    <td class="lot-cell">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="lot-cell">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="lot-cell">
+                        <img class="img-content" src=@item.ImagePath />
+                    </td>
+                    <td class="lot-cell">
+                        @Html.DisplayFor(modelItem => item.HoursDuration)
+                    </td>
+                    <td class="lot-cell">
+                        @Html.DisplayFor(modelItem => item.InitialStake)
+                    </td>
+                    <td class="stake-cell">
+                        @Html.DisplayFor(modelItem => item.LastDateOfStake)
+                    </td>
+                    <td class="stake-cell">
+                        @Html.DisplayFor(modelItem => item.StakeTimeout)
+                    </td>
+                    <td class="stake-cell">
+                        @Html.DisplayFor(modelItem => item.LastStake)
+                    </td>
+                    <td class="stake-cell">
+                        @if (item.IsAvailable)
                         {
-                            @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
-
-                            @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId, isMain = true },
-                                new AjaxOptions
-                                {
-                                    UpdateTargetId = "lotsAndStakes",
-                                    InsertionMode = InsertionMode.Replace,
-                                    HttpMethod = "Get",
-                                    Confirm = "Sure you want to delete lot?"
-                                }, new { @class = "btn btn-danger fa fa-trash-o btn-block", title = "Delete lot" })
+                            <span class="btn btn-success fa fa-unlock"></span>
                         }
-                        <ul>
-                            @if (item.LastStake == null)
+                        else
+                        {
+                            <span class="btn btn-danger fa fa-lock"></span>
+                        }
+                    </td>
+
+                    <td class="stake-cell">
+                        @if (User.Identity.IsAuthenticated && item.IsAvailable)
+                        {
+                            if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
                             {
-                                <li>
-                                    @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId }, new AjaxOptions
-                                    {
-                                        UpdateTargetId = "lotsAndStakes",
-                                        InsertionMode = InsertionMode.Replace,
-                                        HttpMethod = "Get",
-                                        Confirm = "Sure you want to a make stake?",
-                                        LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
-                                </li>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.LotId }, new { @class = "btn btn-warning block-frame", title = "Edit" })
+
+                                @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId, isMain = true },
+                                                  new AjaxOptions
+                                                  {
+                                                      UpdateTargetId = "lotsAndStakes",
+                                                      InsertionMode = InsertionMode.Replace,
+                                                      HttpMethod = "Get",
+                                                      Confirm = "Sure you want to delete lot?"
+                                                  }, new { @class = "btn btn-danger fa fa-trash-o btn-block", title = "Delete lot" })
                             }
-                            else
-                            {
-                                <li>
-                                    @Ajax.ActionLink("+5%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.05 }, new AjaxOptions
-                                    {
-                                        UpdateTargetId = "lotsAndStakes",
-                                        InsertionMode = InsertionMode.Replace,
-                                        HttpMethod = "Get",
-                                        Confirm = "Sure you want to make a stake?",
-                                        LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
-                                </li>
-                                <li>
-                                    @Ajax.ActionLink("+10%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.1 }, new AjaxOptions
-                                    {
-                                        UpdateTargetId = "lotsAndStakes",
-                                        InsertionMode = InsertionMode.Replace,
-                                        HttpMethod = "Get",
-                                        Confirm = "Sure you want to make a stake?",
-                                        LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
-                                </li>
-                                <li>
-                                    @Ajax.ActionLink("+20%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.2 }, new AjaxOptions
-                                    {
-                                        UpdateTargetId = "lotsAndStakes",
-                                        InsertionMode = InsertionMode.Replace,
-                                        HttpMethod = "Get",
-                                        Confirm = "Sure you want to make a stake?",
-                                        LoadingElementId = "loading_" + item.LotId
-                                    }, new { @class = "btn btn-default btn-block", title = "Make stake" })
-                                </li>
-                                <li id="loading_@item.LotId" class="fa fa-spinner fa-spin" style="display: none"></li>
-                            }
-                        </ul>
-                    }
-                </td>
-            </tr>
-        }
+                            <ul>
+                                @if (item.LastStake == null)
+                                {
+                                    <li>
+                                        @Ajax.ActionLink("+", "Create", "Stakes", new { id = item.LotId }, new AjaxOptions
+                                                      {
+                                                          UpdateTargetId = "lotsAndStakes",
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "Get",
+                                                          Confirm = "Sure you want to a make stake?",
+                                                          LoadingElementId = "loading_" + item.LotId
+                                                      }, new { @class = "btn btn-default btn-block", title = "Make stake" })
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        @Ajax.ActionLink("+5%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.05 }, new AjaxOptions
+                                                      {
+                                                          UpdateTargetId = "lotsAndStakes",
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "Get",
+                                                          Confirm = "Sure you want to make a stake?",
+                                                          LoadingElementId = "loading_" + item.LotId
+                                                      }, new { @class = "btn btn-default btn-block", title = "Make stake" })
+                                    </li>
+                                    <li>
+                                        @Ajax.ActionLink("+10%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.1 }, new AjaxOptions
+                                                      {
+                                                          UpdateTargetId = "lotsAndStakes",
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "Get",
+                                                          Confirm = "Sure you want to make a stake?",
+                                                          LoadingElementId = "loading_" + item.LotId
+                                                      }, new { @class = "btn btn-default btn-block", title = "Make stake" })
+                                    </li>
+                                    <li>
+                                        @Ajax.ActionLink("+20%", "Create", "Stakes", new { id = item.LotId, stakeIncrease = 1.2 }, new AjaxOptions
+                                                      {
+                                                          UpdateTargetId = "lotsAndStakes",
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "Get",
+                                                          Confirm = "Sure you want to make a stake?",
+                                                          LoadingElementId = "loading_" + item.LotId
+                                                      }, new { @class = "btn btn-default btn-block", title = "Make stake" })
+                                    </li>
+                                    <li id="loading_@item.LotId" class="fa fa-spinner fa-spin" style="display: none"></li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
