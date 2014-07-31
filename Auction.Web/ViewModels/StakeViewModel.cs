@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Auction.Web.ViewModels
 {
-    public class StakeViewModel : Entity
+    public class StakeViewModel : EntityViewModel
     {
         [Display(Name = "Current stake")]
         public int CurrentStake { get; set; }

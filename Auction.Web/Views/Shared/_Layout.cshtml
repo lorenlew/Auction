@@ -1,50 +1,50 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title Auction</title>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title Auction</title>
 
-    @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/font-css")
-    @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/font-css")
+        @Scripts.Render("~/bundles/modernizr")
 
-</head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink(" ", "Index", "Home", null, new { @class = "fa fa-home fa-2x", title = "Home" })</li>
-                    <li>@Html.ActionLink("Lots", "Index", "Lots")</li>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink(" ", "Index", "Home", null, new {@class = "fa fa-home fa-2x", title = "Home"})</li>
+                        <li>@Html.ActionLink("Lots", "Index", "Lots")</li>
 
-                    @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
-                    {
-                        <li>
-                            @Html.ActionLink(" ", "SoldLots", "Lots", null, new { @class = "fa fa-dollar fa-2x", title = "Sold lots" })
-                        </li>
-                    }
-                </ul>
-                @Html.Partial("_LoginPartial")
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                        {
+                            <li>
+                                @Html.ActionLink(" ", "SoldLots", "Lots", null, new {@class = "fa fa-dollar fa-2x", title = "Sold lots"})
+                            </li>
+                        }
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content font-bordered">
-        @RenderBody()
-        <footer>
-            <p class="font-bordered">&copy; @DateTime.Now.Year - Auction</p>
-        </footer>
-    </div>
+        <div class="container body-content font-bordered">
+            @RenderBody()
+            <footer>
+                <p class="font-bordered">&copy; @DateTime.Now.Year - Auction</p>
+            </footer>
+        </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("Scripts", required: false)
-</body>
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("Scripts", required: false)
+    </body>
 </html>

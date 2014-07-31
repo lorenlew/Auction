@@ -1,8 +1,7 @@
+using System.Data.Entity.Migrations;
+
 namespace Auction.DAL.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class reCreate : DbMigration
     {
         public override void Up()

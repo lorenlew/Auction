@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Auction.Domain.Models;
 using Auction.Interfaces;
-using Auction.Repositories;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject.Infrastructure.Language;
 
 namespace Auction.Web.Controllers

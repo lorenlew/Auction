@@ -11,10 +11,10 @@
 @if (User.IsInRole("Administrator") || User.IsInRole("Moderator"))
 {
     <p class="no-shadow">
-        @Html.ActionLink("Add new lot", "Create", null, new { @class = "btn btn-info block-frame", title = "" })
+        @Html.ActionLink("Add new lot", "Create", null, new {@class = "btn btn-info block-frame", title = ""})
     </p>
 }
 
 <div id="lotsAndStakes">
     @Html.Partial("_lotsAndStakes", Model)
-</div>  
+</div>

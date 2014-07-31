@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Web;
 using Auction.Domain.Attributes;
 using Auction.Domain.Models;
 
 namespace Auction.Web.ViewModels
 {
-    public class LotViewModel : Entity
+    public class LotViewModel : EntityViewModel
     {
         [Display(Name = "Lot name")]
         [Required(ErrorMessage = "Enter lot name")]

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
-using Auction.Repositories;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;

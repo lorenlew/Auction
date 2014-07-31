@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Auction.Domain.Models;
 using Auction.Interfaces;
-using Auction.Repositories;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;

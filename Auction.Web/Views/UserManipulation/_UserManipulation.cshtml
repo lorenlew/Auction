@@ -5,11 +5,11 @@
     @if (User.IsInRole("Administrator"))
     {
         @:Current role - <span class="text-danger">Administrator</span>
-}
+    }
     else
     {
         @:Current role -<span class="text-danger"> Moderator</span>
-}
+    }
 </h1>
 
 <table class="table  table-bordered tab-content table-hover table-responsive table-condensed table-striped">
@@ -38,26 +38,24 @@
                              && !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator")
                              || User.IsInRole("Administrator"))
                         {
-
                             if (!item.IsBanned)
                             {
-                                @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                @Ajax.ActionLink("Ban user", "ChangeUserAccess", "UserManipulation", new {name = item.UserName}, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-success btn-block" })
+                                }, new {@class = "btn btn-success btn-block"})
                             }
                             else
                             {
-                                @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                @Ajax.ActionLink("Unban user", "ChangeUserAccess", "UserManipulation", new {name = item.UserName}, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-default btn-block" })
+                                }, new {@class = "btn btn-default btn-block"})
                             }
-
                         }
                     </td>
 
@@ -66,21 +64,21 @@
                         <td class="fixed-cell">
                             @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
                             {
-                                @Ajax.ActionLink("To moderator", "SetToRole", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                @Ajax.ActionLink("To moderator", "SetToRole", "UserManipulation", new {name = item.UserName}, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-default btn-block" })
+                                }, new {@class = "btn btn-default btn-block"})
                             }
                             else
                             {
-                                @Ajax.ActionLink("To user", "SetToRole", "UserManipulation", new { name = item.UserName }, new AjaxOptions
+                                @Ajax.ActionLink("To user", "SetToRole", "UserManipulation", new {name = item.UserName}, new AjaxOptions
                                 {
                                     UpdateTargetId = "UsersAndRoles",
                                     InsertionMode = InsertionMode.Replace,
                                     HttpMethod = "Post",
-                                }, new { @class = "btn btn-success btn-block" })
+                                }, new {@class = "btn btn-success btn-block"})
                             }
                         </td>
                     }

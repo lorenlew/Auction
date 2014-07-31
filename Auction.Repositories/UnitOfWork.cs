@@ -7,7 +7,6 @@ using Auction.Interfaces;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-
 namespace Auction.Repositories
 {
     public class UnitOfWork : IUnitOfWork

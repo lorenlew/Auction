@@ -2,7 +2,7 @@
 using Auction.Web.ViewModels;
 using AutoMapper;
 
-namespace Auction.Web.App_Start
+namespace Auction.Web
 {
     public class MapperConfig
     {

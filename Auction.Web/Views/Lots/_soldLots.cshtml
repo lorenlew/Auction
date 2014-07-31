@@ -8,7 +8,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Description)
             <th>
                 @Html.DisplayNameFor(model => model.LastDateOfStake)
             </th>
@@ -47,14 +47,14 @@
                     @Html.DisplayFor(modelItem => item.ApplicationUserId)
                 </td>
                 <td class="stake-cell">
-                    @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new { id = item.LotId },
+                    @Ajax.ActionLink(" ", "DeleteConfirmed", "Lots", new {id = item.LotId},
                         new AjaxOptions
                         {
                             UpdateTargetId = "soldLots",
                             InsertionMode = InsertionMode.Replace,
                             HttpMethod = "Post",
                             Confirm = "Sure you want to delete lot?"
-                        }, new { @class = "btn btn-danger fa fa-trash-o", title = "Delete sold lot" })
+                        }, new {@class = "btn btn-danger fa fa-trash-o", title = "Delete sold lot"})
                 </td>
             </tr>
         }

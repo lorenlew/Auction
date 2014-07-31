@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,7 +8,6 @@ using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
 using Auction.Interfaces;
-using Auction.Repositories;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity.Owin;
@@ -28,7 +26,7 @@ namespace Auction.Web.Controllers
         public ActionResult Index(bool? isAjax)
         {
             bool isAjaxRequest = isAjax ?? false;
-            var lotsWithStakes = ViewModelsLogic.GetAvailableLotsAndStakesViewModel(_uow);
+            var lotsWithStakes = LotStakeViewModel.GetAvailable(_uow);
             if (isAjaxRequest)
             {
                 return PartialView("_lotsAndStakes", lotsWithStakes);
@@ -41,13 +39,13 @@ namespace Auction.Web.Controllers
         public async Task<ActionResult> SoldLots()
         {
             await CheckWonStakesAsync();
-            var soldLots = ViewModelsLogic.GetSoldLotsAndStakesViewModel(_uow);
+            var soldLots = LotStakeViewModel.GetSold(_uow);
             return View(soldLots);
         }
 
         private async Task CheckWonStakesAsync()
         {
-            var notReportedStakes = (from lots in ViewModelsLogic.GetLotsAndStakesViewModel(_uow)
+            var notReportedStakes = (from lots in LotStakeViewModel.GetAll(_uow)
                                      where !lots.IsSold && !lots.IsAvailable
                                      select lots).ToList();
 
@@ -185,11 +183,11 @@ namespace Auction.Web.Controllers
             _uow.Save();
             if (isMainPage)
             {
-                return PartialView("_lotsAndStakes", ViewModelsLogic.GetAvailableLotsAndStakesViewModel(_uow));
+                return PartialView("_lotsAndStakes", LotStakeViewModel.GetAvailable(_uow));
             }
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_soldLots", ViewModelsLogic.GetSoldLotsAndStakesViewModel(_uow));
+                return PartialView("_soldLots", LotStakeViewModel.GetSold(_uow));
             }
             return RedirectToAction("Index");
         }
