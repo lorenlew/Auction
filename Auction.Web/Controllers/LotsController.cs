@@ -4,13 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
 using Auction.Interfaces;
 using Auction.Web.ViewModels;
 using AutoMapper;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace Auction.Web.Controllers
 {
@@ -57,25 +55,16 @@ namespace Auction.Web.Controllers
 
         private async Task SendNotificationsToWinnersAsync(IEnumerable<LotStakeViewModel> notReportedStakes)
         {
-            var applicationUserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            try
+            foreach (var stake in notReportedStakes)
             {
-                foreach (var stake in notReportedStakes)
-                {
-                    string emailBody = "<h2>You've won '" + stake.Name +
-                                       "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
+                string emailBody = "<h2>You've won '" + stake.Name +
+                                   "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
 
-                    await applicationUserManager.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
-                    _uow.LotRepository.ReadById(stake.LotId).IsSold = true;
-                    _uow.DisableValidationOnSave();
-                    _uow.Save();
-                }
+                await _uow.UserManager.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
+                _uow.LotRepository.ReadById(stake.LotId).IsSold = true;
+                _uow.DisableValidationOnSave();
+                _uow.Save();
             }
-            finally
-            {
-                applicationUserManager.Dispose();
-            }
-
         }
 
         [Authorize(Roles = "Administrator, Moderator")]

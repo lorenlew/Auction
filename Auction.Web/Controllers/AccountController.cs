@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
+using Auction.Interfaces;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -13,31 +14,52 @@ namespace Auction.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private UserManager<ApplicationUser> _userManager;
-
-        public AccountController()
+        public AccountController(IUnitOfWork uow)
         {
-        }
-
-        public AccountController(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
-        }
-
-        public UserManager<ApplicationUser> UserManager
-        {
-            get
+            if (uow != null)
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
+                UserManager = InitUserManager(uow.UserManager);
             }
         }
 
-        //
-        // GET: /Account/Login
+        private UserManager<ApplicationUser> InitUserManager(UserManager<ApplicationUser> manager)
+        {
+            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
+            {
+                AllowOnlyAlphanumericUserNames = false,
+                RequireUniqueEmail = true
+            };
+
+            manager.PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 6,
+                RequireNonLetterOrDigit = true,
+                RequireDigit = true,
+                RequireLowercase = true,
+                RequireUppercase = true,
+            };
+            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
+            {
+                MessageFormat = "Your security code is: {0}"
+            });
+            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
+            {
+                Subject = "Security Code",
+                BodyFormat = "Your security code is: {0}"
+            });
+            manager.EmailService = new EmailService();
+            manager.SmsService = new SmsService();
+            var identityFactoryOptions = new IdentityFactoryOptions<UserManager<ApplicationUser>>();
+            var dataProtectionProvider = identityFactoryOptions.DataProtectionProvider;
+            if (dataProtectionProvider != null)
+            {
+                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+            }
+            return manager;
+        }
+
+        private UserManager<ApplicationUser> UserManager { get; set; }
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -45,8 +67,6 @@ namespace Auction.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -80,21 +100,15 @@ namespace Auction.Web.Controllers
 
 
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
-        //
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -114,28 +128,17 @@ namespace Auction.Web.Controllers
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    //await SignInAsync(user, isPersistent: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return View("CheckEmail");
                 }
-                else
-                {
-                    AddErrors(result);
-                }
+                AddErrors(result);
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
@@ -149,23 +152,16 @@ namespace Auction.Web.Controllers
             {
                 return View("ConfirmEmail");
             }
-            else
-            {
-                AddErrors(result);
-                return View();
-            }
+            AddErrors(result);
+            return View();
         }
 
-        //
-        // GET: /Account/ForgotPassword
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -180,29 +176,20 @@ namespace Auction.Web.Controllers
                     ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
                     return View();
                 }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
@@ -213,8 +200,6 @@ namespace Auction.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -234,27 +219,18 @@ namespace Auction.Web.Controllers
                 {
                     return RedirectToAction("ResetPasswordConfirmation", "Account");
                 }
-                else
-                {
-                    AddErrors(result);
-                    return View();
-                }
+                AddErrors(result);
+                return View();
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // POST: /Account/Disassociate
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
@@ -274,8 +250,6 @@ namespace Auction.Web.Controllers
             return RedirectToAction("Manage", new { Message = message });
         }
 
-        //
-        // GET: /Account/Manage
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -289,8 +263,6 @@ namespace Auction.Web.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
@@ -310,10 +282,7 @@ namespace Auction.Web.Controllers
                         await SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+                    AddErrors(result);
                 }
             }
             else
@@ -332,10 +301,7 @@ namespace Auction.Web.Controllers
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
                     }
-                    else
-                    {
-                        AddErrors(result);
-                    }
+                    AddErrors(result);
                 }
             }
 
@@ -343,8 +309,6 @@ namespace Auction.Web.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -354,8 +318,6 @@ namespace Auction.Web.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
-        // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -381,8 +343,6 @@ namespace Auction.Web.Controllers
             }
         }
 
-        //
-        // POST: /Account/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
@@ -391,8 +351,6 @@ namespace Auction.Web.Controllers
             return new ChallengeResult(provider, Url.Action("LinkLoginCallback", "Account"), User.Identity.GetUserId());
         }
 
-        //
-        // GET: /Account/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
@@ -408,8 +366,6 @@ namespace Auction.Web.Controllers
             return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -428,7 +384,10 @@ namespace Auction.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser()
+                {
+                    UserName = model.Email
+                };
                 IdentityResult result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -453,8 +412,6 @@ namespace Auction.Web.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
@@ -463,8 +420,6 @@ namespace Auction.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //
-        // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {

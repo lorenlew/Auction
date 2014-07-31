@@ -48,8 +48,6 @@
     <Reference Include="System.Web.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\FileSizeAttribute.cs" />
-    <Compile Include="Attributes\FileTypesAttribute.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Lot.cs" />

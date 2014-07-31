@@ -68,10 +68,10 @@ namespace Auction.Repositories
 
         private void Init()
         {
-            var dbContext = new ApplicationDbContext();
+            var dbContext = ApplicationDbContext.Create();
             _context = _context ?? dbContext;
-            var userStore = new UserStore<ApplicationUser>(dbContext as DbContext) as IUserStore<ApplicationUser>;
-            _userManager = new UserManager<ApplicationUser>(userStore);
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
+            _userManager = _userManager ?? userManager;
         }
 
         public UnitOfWork()
