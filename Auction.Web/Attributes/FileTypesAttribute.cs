@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Auction.Domain.Attributes
+namespace Auction.Web.Attributes
 {
     public class FileTypesAttribute : ValidationAttribute
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -14,11 +14,11 @@ namespace Auction.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(IUnitOfWork uow)
+        public AccountController(IUserManagerService userManagerService)
         {
-            if (uow != null)
+            if (userManagerService != null)
             {
-                UserManager = InitUserManager(uow.UserManager);
+                UserManager = InitUserManager(userManagerService.Get());
             }
         }
 

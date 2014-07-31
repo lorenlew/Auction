@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Web.Mvc;
+using Auction.Domain;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
 
@@ -10,11 +11,13 @@ namespace Auction.Web.Controllers
 {
     public class StakesController : Controller
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ILotService _lotService;
+        private readonly IStakeService _stakeService;
 
-        public StakesController(IUnitOfWork uow)
+        public StakesController(ILotService lotService, IStakeService stakeService)
         {
-            _uow = uow;
+            _lotService = lotService;
+            _stakeService = stakeService;
         }
 
         [Authorize]
@@ -25,7 +28,7 @@ namespace Auction.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             stakeIncrease = stakeIncrease ?? 1.05;
-            var currentLot = LotStakeViewModel.GetCurrentLot((int)id, _uow);
+            var currentLot = _lotService.GetCurrentLot((int)id);
             if (currentLot == null)
             {
                 return HttpNotFound();
@@ -39,14 +42,18 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            _uow.StakeRepository.Create(currentStake);
-            _uow.Save();
+            _stakeService.Get().Create(currentStake);
+            _stakeService.Save();
             return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
         }
 
-        private Stake GetCurrentStake(int id, double? stakeIncrease, LotStakeViewModel currentLot)
+        private Stake GetCurrentStake(int id, double? stakeIncrease, LotStake currentLot)
         {
-            if (currentLot == null) throw new ArgumentNullException("currentLot");
+            if (currentLot == null)
+            {
+                HttpNotFound();
+            }
+            ;
             var currentStake = new Stake
             {
                 LotId = id,
@@ -71,7 +78,8 @@ namespace Auction.Web.Controllers
         {
             if (disposing)
             {
-                _uow.Dispose();
+                _lotService.Dispose();
+                _stakeService.Dispose();
             }
             base.Dispose(disposing);
         }

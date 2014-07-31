@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using Auction.DAL;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Repositories.Interfaces;
 
-namespace Auction.Repositories
+namespace Auction.Repositories.Repositories
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {

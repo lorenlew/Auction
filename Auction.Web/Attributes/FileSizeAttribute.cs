@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web;
 
-namespace Auction.Domain.Attributes
+namespace Auction.Web.Attributes
 {
     public class FileSizeAttribute : ValidationAttribute
     {

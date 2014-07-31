@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -9,11 +9,11 @@ namespace Auction.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUnitOfWork _uow;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(IUnitOfWork uow)
+        public HomeController(IUserManagerService userManagerService)
         {
-            _uow = uow;
+            _userManager = userManagerService.Get();
         }
         public ActionResult Index()
         {
@@ -21,7 +21,7 @@ namespace Auction.Web.Controllers
         }
         public ActionResult UserInfo()
         {
-            var currentUser = _uow.UserManager.FindByName(User.Identity.Name);
+            var currentUser = _userManager.FindByName(User.Identity.Name);
             var applicationUserViewModel = Mapper.Map<ApplicationUser, ApplicationUserViewModel>(currentUser);
             return View(applicationUserViewModel);
         }
@@ -29,7 +29,7 @@ namespace Auction.Web.Controllers
         {
             if (disposing)
             {
-                _uow.Dispose();
+                _userManager.Dispose();
             }
             base.Dispose(disposing);
         }

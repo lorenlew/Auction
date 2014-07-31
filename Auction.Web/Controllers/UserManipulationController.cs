@@ -2,7 +2,7 @@
 using System.Net;
 using System.Web.Mvc;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -12,18 +12,18 @@ namespace Auction.Web.Controllers
 {
     public class UserManipulationController : Controller
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IUserManagerService _userManagerService;
 
-        public UserManipulationController(IUnitOfWork uow)
+        public UserManipulationController(IUserManagerService userManagerService)
         {
-            _uow = uow;
+            _userManagerService = userManagerService;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
-            var users = _uow.UserRepository.Read().ToEnumerable();
-            ViewBag.userManager = _uow.UserManager;
+            var users = _userManagerService.Get().Users.ToEnumerable();
+            ViewBag.userManager = _userManagerService.Get();
             var usersViewModel = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserViewModel>>(users);
             if (Request.IsAjaxRequest())
             {
@@ -44,21 +44,21 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            var isTargetUserModerator = _uow.UserManager.IsInRole(targetUserId, "Moderator");
+            var isTargetUserModerator = _userManagerService.Get().IsInRole(targetUserId, "Moderator");
             if (isTargetUserModerator)
             {
-                _uow.UserManager.RemoveFromRole(targetUserId, "Moderator");
+                _userManagerService.Get().RemoveFromRole(targetUserId, "Moderator");
             }
             else
             {
-                _uow.UserManager.AddToRole(targetUserId, "Moderator");
+                _userManagerService.Get().AddToRole(targetUserId, "Moderator");
             }
             return UserManagement();
         }
 
         private string GetUserId(string name)
         {
-            var targetUser = _uow.UserManager.FindByName(name);
+            var targetUser = _userManagerService.Get().FindByName(name);
             var targetUserId = targetUser.Id;
             return targetUserId;
         }
@@ -70,18 +70,18 @@ namespace Auction.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var targetUser = _uow.UserManager.FindByName(name);
+            var targetUser = _userManagerService.Get().FindByName(name);
             if (targetUser == null)
             {
                 return HttpNotFound();
             }
-            var isUserPerformingActionModerator = _uow.UserManager.IsInRole(User.Identity.GetUserId(), "Moderator");
-            var isTargetUserModerator = _uow.UserManager.IsInRole(targetUser.Id, "Moderator");
+            var isUserPerformingActionModerator = _userManagerService.Get().IsInRole(User.Identity.GetUserId(), "Moderator");
+            var isTargetUserModerator = _userManagerService.Get().IsInRole(targetUser.Id, "Moderator");
 
             if (User.IsInRole("Administrator") || (isUserPerformingActionModerator && !isTargetUserModerator))
             {
                 targetUser.IsBanned = !targetUser.IsBanned;
-                _uow.UserManager.Update(targetUser);
+                _userManagerService.Get().Update(targetUser);
             }
             return UserManagement();
         }
@@ -90,7 +90,7 @@ namespace Auction.Web.Controllers
         {
             if (disposing)
             {
-                _uow.Dispose();
+                _userManagerService.Dispose();
             }
             base.Dispose(disposing);
         }

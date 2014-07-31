@@ -4,33 +4,32 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Auction.DAL;
-using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Repositories.Interfaces;
+using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Auction.Repositories
+namespace Auction.Repositories.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class RoleRepository : IRoleRepository
     {
-
         private readonly ApplicationDbContext _context;
 
-        private readonly DbSet<ApplicationUser> _dbSet;
+        private readonly DbSet<IdentityRole> _dbSet;
 
-        public UserRepository(ApplicationDbContext context)
+        public RoleRepository(ApplicationDbContext context)
         {
             if (context == null) return;
             _context = context;
-            _dbSet = context.Set<ApplicationUser>();
+            _dbSet = context.Set<IdentityRole>();
         }
 
-        void IUserRepository.Create(ApplicationUser entity)
+        void IRoleRepository.Create(IdentityRole entity)
         {
             _dbSet.Add(entity);
         }
 
-        IEnumerable<ApplicationUser> IUserRepository.Read(Expression<Func<ApplicationUser, bool>> filter, Func<IQueryable<ApplicationUser>, IOrderedQueryable<ApplicationUser>> orderBy, string includeProperties)
+        IEnumerable<IdentityRole> IRoleRepository.Read(Expression<Func<IdentityRole, bool>> filter, Func<IQueryable<IdentityRole>, IOrderedQueryable<IdentityRole>> orderBy, string includeProperties)
         {
-            IQueryable<ApplicationUser> query = _dbSet;
+            IQueryable<IdentityRole> query = _dbSet;
 
             if (filter != null)
                 query = query.Where(filter);
@@ -43,24 +42,24 @@ namespace Auction.Repositories
             return query;
         }
 
-        ApplicationUser IUserRepository.ReadById(object id)
+        IdentityRole IRoleRepository.ReadById(object id)
         {
             return _dbSet.Find(id);
         }
 
-        void IUserRepository.Update(ApplicationUser entity)
+        void IRoleRepository.Update(IdentityRole entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        void IUserRepository.Delete(object id)
+        void IRoleRepository.Delete(object id)
         {
-            ApplicationUser entity = _dbSet.Find(id);
+            IdentityRole entity = _dbSet.Find(id);
             Delete(entity);
         }
 
-        private void Delete(ApplicationUser entity)
+        private void Delete(IdentityRole entity)
         {
             if (_context.Entry(entity).State == EntityState.Detached)
             {
@@ -68,6 +67,5 @@ namespace Auction.Repositories
             }
             _dbSet.Remove(entity);
         }
-
     }
 }

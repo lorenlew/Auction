@@ -3,7 +3,8 @@ using System.Data.Entity;
 using Auction.DAL;
 using Auction.DAL.Migrations;
 using Auction.Domain.Models;
-using Auction.Interfaces;
+using Auction.Repositories.Interfaces;
+using Auction.Repositories.Repositories;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 

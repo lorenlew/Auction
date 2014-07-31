@@ -1,7 +1,7 @@
 using System;
 using System.Web;
-using Auction.Interfaces;
-using Auction.Repositories;
+using Auction.Services;
+using Auction.Services.Interfaces;
 using Auction.Web;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
@@ -45,7 +45,6 @@ namespace Auction.Web
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-                kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
                 RegisterServices(kernel);
                 return kernel;
             }
@@ -62,6 +61,9 @@ namespace Auction.Web
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<IStakeService>().To<StakeService>().InRequestScope();
+            kernel.Bind<ILotService>().To<LotService>().InRequestScope();
+            kernel.Bind<IUserManagerService>().To<UserManagerService>().InRequestScope();
         }        
     }
 }
