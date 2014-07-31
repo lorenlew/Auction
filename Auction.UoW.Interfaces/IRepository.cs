@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Auction.Domain.Models;
 
-namespace Auction.Repositories.Interfaces
+namespace Auction.UoW.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : Entity
     {

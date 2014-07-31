@@ -80,15 +80,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Auction.Domain\Auction.Domain.csproj">
-      <Project>{fd1e42c4-dd7c-4110-b76a-bee9c976fd89}</Project>
-      <Name>Auction.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\201407292355240_reCreate.resx">
       <DependentUpon>201407292355240_reCreate.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Auction.Domain\Auction.Domain.csproj">
+      <Project>{6ca47881-7c37-4d84-9c1e-dfd3c7c6099e}</Project>
+      <Name>Auction.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

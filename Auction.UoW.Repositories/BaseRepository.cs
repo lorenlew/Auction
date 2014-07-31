@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using Auction.DAL;
 using Auction.Domain.Models;
-using Auction.Repositories.Interfaces;
+using Auction.UoW.Interfaces;
 
-namespace Auction.Repositories.Repositories
+namespace Auction.UoW.Repositories
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
@@ -26,7 +26,8 @@ namespace Auction.Repositories.Repositories
             _dbSet.Add(entity);
         }
 
-        IQueryable<TEntity> IRepository<TEntity>.Read(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, String includeProperties)
+        IQueryable<TEntity> IRepository<TEntity>
+            .Read(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, String includeProperties)
         {
             IQueryable<TEntity> query = _dbSet;
 

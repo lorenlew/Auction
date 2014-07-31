@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Auction.Domain;
+using Auction.Domain.DerivativeModels;
 using Auction.Domain.Models;
 using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
@@ -67,8 +67,8 @@ namespace Auction.Web.Controllers
                 string emailBody = "<h2>You've won '" + stake.Name +
                                    "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
 
-                await _userManagerService.Get().SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
-                _lotService.Get().ReadById(stake.LotId).IsSold = true;
+                await _userManagerService.GetAccess().SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
+                _lotService.GetRepository().ReadById(stake.LotId).IsSold = true;
                 _lotService.DisableValidationOnSave();
                 _lotService.Save();
             }
@@ -110,7 +110,7 @@ namespace Auction.Web.Controllers
             lot.ImagePath = virtualPath;
 
             var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
-            _lotService.Get().Create(lotDomain);
+            _lotService.GetRepository().Create(lotDomain);
             _lotService.Save();
             lot.Image.SaveAs(physicalPath);
             return RedirectToAction("Index");
@@ -118,7 +118,7 @@ namespace Auction.Web.Controllers
 
         private bool IsLotNameUsed(LotViewModel lot)
         {
-            var lotsWithSameName = from l in _lotService.Get().Read()
+            var lotsWithSameName = from l in _lotService.GetRepository().Read()
                                    where l.Name == lot.Name && lot.Id != l.Id
                                    select l;
             var isNameUsed = lotsWithSameName.Any();
@@ -132,7 +132,7 @@ namespace Auction.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Lot lot = _lotService.Get().ReadById(id);
+            Lot lot = _lotService.GetRepository().ReadById(id);
             if (lot == null)
             {
                 return HttpNotFound();
@@ -162,7 +162,7 @@ namespace Auction.Web.Controllers
                 return View(lot);
             }
             var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
-            _lotService.Get().Update(lotDomain);
+            _lotService.GetRepository().Update(lotDomain);
             _lotService.DisableValidationOnSave();
             _lotService.Save();
             return RedirectToAction("Index");
@@ -172,10 +172,10 @@ namespace Auction.Web.Controllers
         public ActionResult DeleteConfirmed(int id, bool? isMain)
         {
             bool isMainPage = isMain ?? false;
-            Lot lot = _lotService.Get().ReadById(id);
+            Lot lot = _lotService.GetRepository().ReadById(id);
             string physicalPath = HttpContext.Server.MapPath(lot.ImagePath);
             System.IO.File.Delete(physicalPath);
-            _lotService.Get().Delete(lot);
+            _lotService.GetRepository().Delete(lot);
             _lotService.Save();
             if (isMainPage)
             {

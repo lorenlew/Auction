@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Auction.Domain;
+using Auction.Domain.DerivativeModels;
 using Auction.Domain.Models;
-using Auction.Repositories.Interfaces;
+using Auction.UoW.Interfaces;
 
 namespace Auction.Services.Interfaces
 {
     public interface ILotService : IService
     {
-        IRepository<Lot> Get();
+        IRepository<Lot> GetRepository();
 
         IEnumerable<LotStake> GetAll();
 
@@ -16,7 +15,7 @@ namespace Auction.Services.Interfaces
 
         IEnumerable<LotStake> GetSold();
 
-        LotStake GetCurrentLot(int id);
+        LotStake FindById(int id);
 
     }
 }

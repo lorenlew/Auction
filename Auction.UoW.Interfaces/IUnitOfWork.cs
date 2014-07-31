@@ -2,8 +2,9 @@
 using Auction.DAL;
 using Auction.Domain.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Auction.Repositories.Interfaces
+namespace Auction.UoW.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -11,9 +12,7 @@ namespace Auction.Repositories.Interfaces
 
         UserManager<ApplicationUser> UserManager { get; }
 
-        IUserRepository UserRepository { get; }
-
-        IRoleRepository RoleRepository { get; }
+        RoleManager<IdentityRole> RoleManager { get; }
 
         IRepository<Lot> LotRepository { get; }
 

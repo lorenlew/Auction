@@ -18,7 +18,7 @@ namespace Auction.Web.Controllers
         {
             if (userManagerService != null)
             {
-                UserManager = InitUserManager(userManagerService.Get());
+                UserManager = InitUserManager(userManagerService.GetAccess());
             }
         }
 

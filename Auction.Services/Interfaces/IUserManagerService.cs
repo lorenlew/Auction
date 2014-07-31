@@ -5,6 +5,6 @@ namespace Auction.Services.Interfaces
 {
     public interface IUserManagerService : IService
     {
-        UserManager<ApplicationUser> Get();
+        UserManager<ApplicationUser> GetAccess();
     }
 }

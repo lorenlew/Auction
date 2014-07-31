@@ -13,7 +13,7 @@ namespace Auction.Web.Controllers
 
         public HomeController(IUserManagerService userManagerService)
         {
-            _userManager = userManagerService.Get();
+            _userManager = userManagerService.GetAccess();
         }
         public ActionResult Index()
         {

@@ -288,16 +288,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auction.Domain\Auction.Domain.csproj">
-      <Project>{fd1e42c4-dd7c-4110-b76a-bee9c976fd89}</Project>
+      <Project>{6ca47881-7c37-4d84-9c1e-dfd3c7c6099e}</Project>
       <Name>Auction.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Auction.Repositories\Auction.UOW.csproj">
-      <Project>{73114209-ED21-4E94-9DDA-F07C6D4834F9}</Project>
-      <Name>Auction.UOW</Name>
     </ProjectReference>
     <ProjectReference Include="..\Auction.Services\Auction.Services.csproj">
       <Project>{d1fc5c81-21b0-4d36-aa51-dc83bd8a6214}</Project>
       <Name>Auction.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Auction.UoW.Interfaces\Auction.UoW.Interfaces.csproj">
+      <Project>{73114209-ed21-4e94-9dda-f07c6d4834f9}</Project>
+      <Name>Auction.UoW.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

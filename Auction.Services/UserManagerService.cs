@@ -6,7 +6,7 @@ namespace Auction.Services
 {
     public class UserManagerService : BaseService, IUserManagerService
     {
-        public UserManager<ApplicationUser> Get()
+        public UserManager<ApplicationUser> GetAccess()
         {
             return Uow.UserManager;
         }

@@ -64,6 +64,7 @@ namespace Auction.Web
             kernel.Bind<IStakeService>().To<StakeService>().InRequestScope();
             kernel.Bind<ILotService>().To<LotService>().InRequestScope();
             kernel.Bind<IUserManagerService>().To<UserManagerService>().InRequestScope();
+            kernel.Bind<IRoleManagerService>().To<RoleManagerService>().InRequestScope();
         }        
     }
 }

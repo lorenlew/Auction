@@ -1,7 +1,7 @@
 ﻿using System;
-using Auction.Repositories;
-using Auction.Repositories.Interfaces;
 using Auction.Services.Interfaces;
+using Auction.UoW.Interfaces;
+using Auction.UoW.Repositories;
 
 namespace Auction.Services
 {
@@ -15,6 +15,7 @@ namespace Auction.Services
         {
             Uow = new UnitOfWork();
         }
+
         public void Save()
         {
             Uow.Save();
@@ -25,7 +26,7 @@ namespace Auction.Services
             Uow.DisableValidationOnSave(); 
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
             {

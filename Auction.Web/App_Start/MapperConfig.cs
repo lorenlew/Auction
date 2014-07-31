@@ -1,4 +1,5 @@
-﻿using Auction.Domain;
+﻿
+using Auction.Domain.DerivativeModels;
 using Auction.Domain.Models;
 using Auction.Web.ViewModels;
 using AutoMapper;

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Auction.Domain;
-using Auction.Repositories.Interfaces;
+using Auction.Domain.DerivativeModels;
 using Auction.Services.Interfaces;
+using Auction.UoW.Interfaces;
 
 namespace Auction.Services
 {
     public class LotService : BaseService, ILotService
     {
-        public IRepository<Domain.Models.Lot> Get()
+        public IRepository<Domain.Models.Lot> GetRepository()
         {
             return Uow.LotRepository;
         }
@@ -61,7 +61,7 @@ namespace Auction.Services
             return availableLotsAndStakes;
         }
 
-        public  LotStake GetCurrentLot(int id)
+        public  LotStake FindById(int id)
         {
             var currentLot = (from lots in GetAvailable()
                               where lots.LotId == id

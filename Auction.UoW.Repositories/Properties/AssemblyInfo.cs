@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Auction.Interfaces")]
+[assembly: AssemblyTitle("Auction.UoW.Repositories")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Auction.Interfaces")]
+[assembly: AssemblyProduct("Auction.UoW.Repositories")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("44d87764-4a5f-45d2-8d33-952e832925e9")]
+[assembly: Guid("8130dd87-3040-47a5-bd0e-dec4bda8a43d")]
 
 // Version information for an assembly consists of the following four values:
 //
