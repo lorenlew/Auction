@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Auction.DAL.Models;
+using Auction.DAL.UnitOfWork;
 using Auction.Domain.DerivativeModels;
+using Auction.Domain.Models;
 using Auction.Services.Interfaces;
-using Auction.UoW.Interfaces;
+using AutoMapper;
 
 namespace Auction.Services
 {
     public class LotService : BaseService, ILotService
     {
-        public IRepository<Domain.Models.Lot> GetRepository()
+        public LotService(IUnitOfWork unitOfWork)
+            : base(unitOfWork)
         {
-            return Uow.LotRepository;
         }
 
-        public  IEnumerable<LotStake> GetAll()
+        public IEnumerable<LotStakeDomainModel> GetAll()
         {
             var lotsAndStakes = (from lot in Uow.LotRepository.Read()
                                  join stake in Uow.StakeRepository.Read() on lot.Id equals stake.LotId into joinedLotsAndStakes
                                  from jLotsAndStakes in joinedLotsAndStakes.DefaultIfEmpty()
-                                 select new LotStake()
+                                 select new LotStakeDomainModel()
                                  {
                                      LotId = lot.Id,
                                      Name = lot.Name,
@@ -42,7 +45,7 @@ namespace Auction.Services
             return groupedLotStakes;
         }
 
-        public IEnumerable<LotStake> GetAvailable()
+        public IEnumerable<LotStakeDomainModel> GetAvailable()
         {
             var availableLotsAndStakes = (from lots in GetAll()
                                           where !lots.IsSold
@@ -52,7 +55,7 @@ namespace Auction.Services
             return availableLotsAndStakes;
         }
 
-        public IEnumerable<LotStake> GetSold()
+        public IEnumerable<LotStakeDomainModel> GetSold()
         {
             var availableLotsAndStakes = (from lots in GetAll()
                                           where lots.IsSold
@@ -61,12 +64,57 @@ namespace Auction.Services
             return availableLotsAndStakes;
         }
 
-        public  LotStake FindById(int id)
+        public LotStakeDomainModel FindById(int id)
         {
             var currentLot = (from lots in GetAvailable()
                               where lots.LotId == id
                               select lots).SingleOrDefault();
             return currentLot;
+        }
+
+        public void Add(LotDomainModel entity)
+        {
+            if (entity == null) throw new ArgumentNullException("entity");
+            var lot = Mapper.Map<LotDomainModel, Lot>(entity);
+            Uow.LotRepository.Add(lot);
+        }
+
+        public IEnumerable<LotDomainModel> Read()
+        {
+            var lots = Uow.LotRepository.Read();
+            var lotsDomain = Mapper.Map<IEnumerable<Lot>, IEnumerable<LotDomainModel>>(lots);
+            return lotsDomain;
+        }
+
+        public LotDomainModel ReadById(int id)
+        {
+            var lot = Uow.LotRepository.ReadById(id);
+            var lotDomain = Mapper.Map<Lot, LotDomainModel>(lot);
+            return lotDomain;
+        }
+
+        public void Update(LotDomainModel entity)
+        {
+            if (entity == null) throw new ArgumentNullException("entity");
+            var lot = Mapper.Map<LotDomainModel, Lot>(entity);
+            Uow.LotRepository.Update(lot);
+        }
+
+        public void Delete(LotDomainModel entity)
+        {
+            if (entity == null) throw new ArgumentNullException("entity");
+            var lot = Mapper.Map<LotDomainModel, Lot>(entity);
+            Uow.LotRepository.Delete(lot);
+        }
+
+        public void Save()
+        {
+            Uow.Save();
+        }
+
+        public void DisableValidationOnSave()
+        {
+            Uow.DisableValidationOnSave();
         }
     }
 }

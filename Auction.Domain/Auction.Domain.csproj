@@ -58,11 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DerivativeModels\LotStake.cs" />
-    <Compile Include="Models\ApplicationUser.cs" />
-    <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Lot.cs" />
-    <Compile Include="Models\Stake.cs" />
+    <Compile Include="DerivativeModels\LotStakeDomainModel.cs" />
+    <Compile Include="Models\ApplicationUserDomainModel.cs" />
+    <Compile Include="Models\EntityDomainModel.cs" />
+    <Compile Include="Models\LotDomainModel.cs" />
+    <Compile Include="Models\StakeDomainModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

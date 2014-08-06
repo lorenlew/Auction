@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<Auction.Web.ViewModels.ApplicationUserViewModel>
-
+﻿@model IEnumerable<Auction.Web.ViewModels.ApplicationUserViewModel>
+@{
+    var userManagerService = ViewBag.userManagerService;
+}
 <h1 class="text-center">
     @if (User.IsInRole("Administrator"))
     {
@@ -34,8 +35,8 @@
                     </td>
                     <td class="fixed-cell">
                         @*You can ban if you are admin or if you are moderator and target is not admin or moderator*@
-                        @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator")
-                             && !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator")
+                        @if (!userManagerService.IsInRole(item.Id, "Administrator")
+                             && !userManagerService.IsInRole(item.Id, "Moderator")
                              || User.IsInRole("Administrator"))
                         {
                             if (!item.IsBanned)
@@ -62,7 +63,7 @@
                     if (User.IsInRole("Administrator"))
                     {
                         <td class="fixed-cell">
-                            @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
+                            @if (!userManagerService.IsInRole(item.Id, "Moderator"))
                             {
                                 @Ajax.ActionLink("To moderator", "SetToRole", "UserManipulation", new {name = item.UserName}, new AjaxOptions
                                 {
@@ -84,12 +85,12 @@
                     }
                     <td class="fixed-cell">
                         <div class="text-success">
-                            @foreach (var role in (UserManagerExtensions.GetRoles(ViewBag.userManager, item.Id)))
+                            @foreach (var role in (userManagerService.GetRoles(item.Id)))
                             {
                                 @role
                             }
-                            @if (!UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Administrator") &&
-                                 !UserManagerExtensions.IsInRole(ViewBag.userManager, item.Id, "Moderator"))
+                            @if (!userManagerService.IsInRole(item.Id, "Administrator") &&
+                                 !userManagerService.IsInRole(item.Id, "Moderator"))
                             {
                                 @:User
                             }

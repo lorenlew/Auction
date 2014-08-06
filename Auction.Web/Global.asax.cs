@@ -13,6 +13,7 @@ namespace Auction.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             MapperConfig.RegisterMaps();
+            Services.Config.MapperConfig.RegisterMaps();
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using Auction.DAL;
-using Auction.Domain.Models;
-using Auction.UoW.Interfaces;
+using Auction.DAL.Models;
 
-namespace Auction.UoW.Repositories
+namespace Auction.DAL.UnitOfWork
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
@@ -16,13 +15,14 @@ namespace Auction.UoW.Repositories
 
         public BaseRepository(ApplicationDbContext context)
         {
-            if (context == null) return;
+            if (context == null) throw new ArgumentNullException("context");
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
 
-        void IRepository<TEntity>.Create(TEntity entity)
+        void IRepository<TEntity>.Add(TEntity entity)
         {
+            if (entity == null) throw new NoNullAllowedException();
             _dbSet.Add(entity);
         }
 
@@ -44,25 +44,27 @@ namespace Auction.UoW.Repositories
 
         TEntity IRepository<TEntity>.ReadById(object id)
         {
+            if (id == null) throw new NoNullAllowedException();
             return _dbSet.Find(id);
         }
 
         void IRepository<TEntity>.Update(TEntity entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entity);
-            }
+            if (entity == null)  throw new NoNullAllowedException();
+            var entityToUpdate = _dbSet.Find(entity.Id);
+            if (entityToUpdate == null) return;
+            _context.Entry(entityToUpdate).State = EntityState.Detached;
+            _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
 
         void IRepository<TEntity>.Delete(TEntity entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entity);
-            }
-            _dbSet.Remove(entity);
+            if (entity == null) throw new NoNullAllowedException();
+
+            var entityToDelete = _dbSet.Find(entity.Id);
+            if (entityToDelete == null) return;
+            _dbSet.Remove(entityToDelete);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Auction.Domain.DerivativeModels
 {
-    public class LotStake
+    public class LotStakeDomainModel
     {
         public int LotId { get; set; }
 

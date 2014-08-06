@@ -19,13 +19,28 @@ namespace Auction.Web.Attributes
         {
             if (value == null) return true;
 
-            var fileExt = System.IO.Path.GetExtension((value as HttpPostedFileBase).FileName).Substring(1);
-            return _types.Contains(fileExt, StringComparer.OrdinalIgnoreCase);
+            var httpPostedFileBase = value as HttpPostedFileBase;
+            if (httpPostedFileBase != null)
+            {
+                var extension = System.IO.Path.GetExtension(httpPostedFileBase.FileName);
+                if (extension != null)
+                {
+                    var fileExt = extension.Substring(1);
+                    return _types.Contains(fileExt, StringComparer.OrdinalIgnoreCase);
+                }
+            }
+            return false;
         }
 
         public override string FormatErrorMessage(string name)
         {
-            return string.Format("Invalid file type. Only the following types {0} are supported.", String.Join(", ", _types));
+            if (name == null)
+            {
+                return string.Format("Invalid file type. Only the following types {0} are supported.",
+                    String.Join(", ", _types));
+            }
+            return string.Format("Invalid file type. Only the following types {0} are supported.; {1}",
+                String.Join(", ", _types), name);
         }
     }
 }

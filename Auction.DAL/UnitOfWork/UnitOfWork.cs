@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Data.Entity;
-using Auction.DAL;
 using Auction.DAL.Migrations;
-using Auction.Domain.Models;
-using Auction.UoW.Interfaces;
+using Auction.DAL.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Auction.UoW.Repositories
+namespace Auction.DAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
         private bool _disposed;
-
-        private RoleManager<IdentityRole> _roleManager;
 
         private IRepository<Lot> _lotRepository;
 
@@ -21,7 +17,7 @@ namespace Auction.UoW.Repositories
 
         public ApplicationDbContext Context { get; private set; }
 
-        public UserManager<ApplicationUser> UserManager { get; private set; }
+        public UserManager<ApplicationUser> UserManager { get;  set; }
 
         public RoleManager<IdentityRole> RoleManager { get; private set; }
 

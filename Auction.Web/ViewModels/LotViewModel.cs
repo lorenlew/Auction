@@ -37,6 +37,6 @@ namespace Auction.Web.ViewModels
         public int InitialStake { get; set; }
 
         public bool IsSold { get; set; }
-        public virtual ICollection<Stake> Stakes { get; set; }
+        public ICollection<StakeDomainModel> Stakes { get; set; }
     }
 }

@@ -6,17 +6,17 @@ using AutoMapper;
 
 namespace Auction.Web
 {
-    public class MapperConfig
+    public static class MapperConfig
     {
         public static void RegisterMaps()
         {
-            Mapper.CreateMap<LotViewModel, Lot>();
-            Mapper.CreateMap<Lot, LotViewModel>();
-            Mapper.CreateMap<StakeViewModel, Stake>();
-            Mapper.CreateMap<Stake, StakeViewModel>();
-            Mapper.CreateMap<ApplicationUser, ApplicationUserViewModel>();
-            Mapper.CreateMap<ApplicationUserViewModel, ApplicationUser>();
-            Mapper.CreateMap<LotStake, LotStakeViewModel>();
+            Mapper.CreateMap<LotViewModel, LotDomainModel>();
+            Mapper.CreateMap<LotDomainModel, LotViewModel>();
+            Mapper.CreateMap<StakeViewModel, StakeDomainModel>();
+            Mapper.CreateMap<StakeDomainModel, StakeViewModel>();
+            Mapper.CreateMap<ApplicationUserDomainModel, ApplicationUserViewModel>();
+            Mapper.CreateMap<ApplicationUserViewModel, ApplicationUserDomainModel>();
+            Mapper.CreateMap<LotStakeDomainModel, LotStakeViewModel>();
         }
     }
 }

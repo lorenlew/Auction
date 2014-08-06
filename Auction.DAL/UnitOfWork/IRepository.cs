@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Auction.Domain.Models;
+using Auction.DAL.Models;
 
-namespace Auction.UoW.Interfaces
+namespace Auction.DAL.UnitOfWork
 {
     public interface IRepository<TEntity> where TEntity : Entity
     {
-        void Create(TEntity entity);
+        void Add(TEntity entity);
 
         IQueryable<TEntity> Read(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, String includeProperties = "");

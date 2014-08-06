@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Auction.Domain.Models
+namespace Auction.DAL.Models
 {
     public class Stake : Entity
     {

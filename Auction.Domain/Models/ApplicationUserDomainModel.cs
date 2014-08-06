@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Auction.Domain.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Auction.Web.ViewModels
+namespace Auction.Domain.Models
 {
-    public class ApplicationUserViewModel : IdentityUser
+    public class ApplicationUserDomainModel : IdentityUser
     {
         [StringLength(30)]
-        [Display(Name = "First name")]
+        [Required]
         public string FirstName { get; set; }
 
         [StringLength(30)]
-        [Display(Name = "Last name")]
+        [Required]
         public string LastName { get; set; }
 
         public bool IsBanned { get; set; }

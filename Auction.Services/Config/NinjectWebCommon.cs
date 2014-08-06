@@ -1,8 +1,8 @@
 using System;
 using System.Web;
-using Auction.Services;
+using Auction.DAL.UnitOfWork;
+using Auction.Services.Config;
 using Auction.Services.Interfaces;
-using Auction.Web;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
@@ -10,22 +10,24 @@ using Ninject.Web.Common;
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
 
-namespace Auction.Web
+namespace Auction.Services.Config
 {
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
+
         private static readonly Bootstrapper Bootstrapper = new Bootstrapper();
+
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             Bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -33,7 +35,7 @@ namespace Auction.Web
         {
             Bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -45,6 +47,7 @@ namespace Auction.Web
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+                kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
                 RegisterServices(kernel);
                 return kernel;
             }
@@ -65,6 +68,6 @@ namespace Auction.Web
             kernel.Bind<ILotService>().To<LotService>().InRequestScope();
             kernel.Bind<IUserManagerService>().To<UserManagerService>().InRequestScope();
             kernel.Bind<IRoleManagerService>().To<RoleManagerService>().InRequestScope();
-        }        
+        }
     }
 }

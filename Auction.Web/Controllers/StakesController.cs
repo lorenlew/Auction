@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Web.Mvc;
 using Auction.Services.Interfaces;
 
@@ -11,6 +12,8 @@ namespace Auction.Web.Controllers
 
         public StakesController(ILotService lotService, IStakeService stakeService)
         {
+            if (lotService == null) throw new ArgumentNullException("lotService");
+            if (stakeService == null) throw new ArgumentNullException("stakeService");
             _lotService = lotService;
             _stakeService = stakeService;
         }
@@ -22,7 +25,7 @@ namespace Auction.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            stakeIncrease = stakeIncrease ?? 1.05;
+            stakeIncrease = stakeIncrease ?? _stakeService.MinStakeRate;
             var currentLot = _lotService.FindById((int)id);
             if (currentLot == null)
             {
@@ -37,7 +40,7 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            _stakeService.GetRepository().Create(currentStake);
+            _stakeService.Add(currentStake);
             _stakeService.Save();
             return RedirectToAction("Index", "Lots", new { isAjax = Request.IsAjaxRequest() });
         }

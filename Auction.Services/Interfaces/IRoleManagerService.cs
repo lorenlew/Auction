@@ -5,6 +5,6 @@ namespace Auction.Services.Interfaces
 {
     public interface IRoleManagerService : IService
     {
-        RoleManager<IdentityRole> GetAccess();
+        RoleManager<IdentityRole> RoleManager { get; }
     }
 }

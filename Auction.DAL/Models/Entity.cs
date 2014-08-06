@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Auction.Domain.Models
+namespace Auction.DAL.Models
 {
     public class Entity
     {

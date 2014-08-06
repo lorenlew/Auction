@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity;
-using Auction.Domain.Models;
+using Auction.DAL.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Auction.DAL

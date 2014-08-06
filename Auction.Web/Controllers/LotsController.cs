@@ -21,6 +21,9 @@ namespace Auction.Web.Controllers
 
         public LotsController(ILotService lotService, IStakeService stakeService, IUserManagerService userManagerService)
         {
+            if (lotService == null) throw new ArgumentNullException("lotService");
+            if (stakeService == null) throw new ArgumentNullException("stakeService");
+            if (userManagerService == null) throw new ArgumentNullException("userManagerService");
             _lotService = lotService;
             _stakeService = stakeService;
             _userManagerService = userManagerService;
@@ -30,7 +33,7 @@ namespace Auction.Web.Controllers
         {
             bool isAjaxRequest = isAjax ?? false;
             var lotsWithStakes = _lotService.GetAvailable();
-            var lotStakeViewModel = Mapper.Map<IEnumerable<LotStake>, IEnumerable<LotStakeViewModel>>(lotsWithStakes);
+            var lotStakeViewModel = Mapper.Map<IEnumerable<LotStakeDomainModel>, IEnumerable<LotStakeViewModel>>(lotsWithStakes);
             if (isAjaxRequest)
             {
                 return PartialView("_lotsAndStakes", lotStakeViewModel);
@@ -44,34 +47,8 @@ namespace Auction.Web.Controllers
         {
             await CheckWonStakesAsync();
             var soldLots = _lotService.GetSold();
-            var lotStakeViewModel = Mapper.Map<IEnumerable<LotStake>, IEnumerable<LotStakeViewModel>>(soldLots);
+            var lotStakeViewModel = Mapper.Map<IEnumerable<LotStakeDomainModel>, IEnumerable<LotStakeViewModel>>(soldLots);
             return View(lotStakeViewModel);
-        }
-
-        private async Task CheckWonStakesAsync()
-        {
-            var notReportedStakes = (from lots in _lotService.GetAll()
-                                     where !lots.IsSold && !lots.IsAvailable
-                                     select lots).ToList();
-
-            if (notReportedStakes.Any())
-            {
-                await SendNotificationsToWinnersAsync(notReportedStakes);
-            }
-        }
-
-        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotStake> notReportedStakes)
-        {
-            foreach (var stake in notReportedStakes)
-            {
-                string emailBody = "<h2>You've won '" + stake.Name +
-                                   "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
-
-                await _userManagerService.GetAccess().SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
-                _lotService.GetRepository().ReadById(stake.LotId).IsSold = true;
-                _lotService.DisableValidationOnSave();
-                _lotService.Save();
-            }
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -109,20 +86,11 @@ namespace Auction.Web.Controllers
             string physicalPath = HttpContext.Server.MapPath(virtualPath);
             lot.ImagePath = virtualPath;
 
-            var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
-            _lotService.GetRepository().Create(lotDomain);
+            var lotDomain = Mapper.Map<LotViewModel, LotDomainModel>(lot);
+            _lotService.Add(lotDomain);
             _lotService.Save();
             lot.Image.SaveAs(physicalPath);
             return RedirectToAction("Index");
-        }
-
-        private bool IsLotNameUsed(LotViewModel lot)
-        {
-            var lotsWithSameName = from l in _lotService.GetRepository().Read()
-                                   where l.Name == lot.Name && lot.Id != l.Id
-                                   select l;
-            var isNameUsed = lotsWithSameName.Any();
-            return isNameUsed;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -132,12 +100,12 @@ namespace Auction.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Lot lot = _lotService.GetRepository().ReadById(id);
+            LotDomainModel lot = _lotService.ReadById((int) id);
             if (lot == null)
             {
                 return HttpNotFound();
             }
-            var lotViewModel = Mapper.Map<Lot, LotViewModel>(lot);
+            var lotViewModel = Mapper.Map<LotDomainModel, LotViewModel>(lot);
             return View(lotViewModel);
         }
 
@@ -161,8 +129,8 @@ namespace Auction.Web.Controllers
                 ModelState.AddModelError("", "Same name is already used");
                 return View(lot);
             }
-            var lotDomain = Mapper.Map<LotViewModel, Lot>(lot);
-            _lotService.GetRepository().Update(lotDomain);
+            var lotDomain = Mapper.Map<LotViewModel, LotDomainModel>(lot);
+            _lotService.Update(lotDomain);
             _lotService.DisableValidationOnSave();
             _lotService.Save();
             return RedirectToAction("Index");
@@ -172,22 +140,58 @@ namespace Auction.Web.Controllers
         public ActionResult DeleteConfirmed(int id, bool? isMain)
         {
             bool isMainPage = isMain ?? false;
-            Lot lot = _lotService.GetRepository().ReadById(id);
+            LotDomainModel lot = _lotService.ReadById(id);
             string physicalPath = HttpContext.Server.MapPath(lot.ImagePath);
             System.IO.File.Delete(physicalPath);
-            _lotService.GetRepository().Delete(lot);
+            _lotService.Delete(lot);
             _lotService.Save();
             if (isMainPage)
             {
-                var lotStakeViewModel = Mapper.Map<IEnumerable<LotStake>, IEnumerable<LotStakeViewModel>>(_lotService.GetAvailable());
+                var lotStakeViewModel = Mapper.Map<IEnumerable<LotStakeDomainModel>, IEnumerable<LotStakeViewModel>>(_lotService.GetAvailable());
                 return PartialView("_lotsAndStakes", lotStakeViewModel);
             }
             if (Request.IsAjaxRequest())
             {
-                var lotStakeViewModel = Mapper.Map<IEnumerable<LotStake>, IEnumerable<LotStakeViewModel>>(_lotService.GetSold());
+                var lotStakeViewModel = Mapper.Map<IEnumerable<LotStakeDomainModel>, IEnumerable<LotStakeViewModel>>(_lotService.GetSold());
                 return PartialView("_soldLots", lotStakeViewModel);
             }
             return RedirectToAction("Index");
+        }
+
+        #region serviceMethods
+        private async Task CheckWonStakesAsync()
+        {
+            var notReportedStakes = (from lots in _lotService.GetAll()
+                                     where !lots.IsSold && !lots.IsAvailable
+                                     select lots).ToList();
+
+            if (notReportedStakes.Any())
+            {
+                await SendNotificationsToWinnersAsync(notReportedStakes);
+            }
+        }
+
+        private async Task SendNotificationsToWinnersAsync(IEnumerable<LotStakeDomainModel> notReportedStakes)
+        {
+            foreach (var stake in notReportedStakes)
+            {
+                string emailBody = "<h2>You've won '" + stake.Name +
+                                   "'. Win date - " + stake.StakeTimeout + ". Use personal id to get lot.</h2>";
+
+                await _userManagerService.SendEmailAsync(stake.ApplicationUserId, "Attention!", emailBody);
+                _lotService.ReadById(stake.LotId).IsSold = true;
+                _lotService.DisableValidationOnSave();
+                _lotService.Save();
+            }
+        }
+
+        private bool IsLotNameUsed(LotViewModel lot)
+        {
+            var lotsWithSameName = from l in _lotService.Read()
+                                   where l.Name == lot.Name && lot.Id != l.Id
+                                   select l;
+            var isNameUsed = lotsWithSameName.Any();
+            return isNameUsed;
         }
 
         protected override void Dispose(bool disposing)
@@ -200,5 +204,6 @@ namespace Auction.Web.Controllers
             }
             base.Dispose(disposing);
         }
+        #endregion
     }
 }

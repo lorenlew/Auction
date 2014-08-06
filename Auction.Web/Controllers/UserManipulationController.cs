@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web.Mvc;
 using Auction.Domain.Models;
@@ -6,7 +7,6 @@ using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
-using Ninject.Infrastructure.Language;
 
 namespace Auction.Web.Controllers
 {
@@ -16,15 +16,16 @@ namespace Auction.Web.Controllers
 
         public UserManipulationController(IUserManagerService userManagerService)
         {
+            if (userManagerService == null) throw new ArgumentNullException("userManagerService");
             _userManagerService = userManagerService;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
         public ActionResult UserManagement()
         {
-            var users = _userManagerService.GetAccess().Users.ToEnumerable();
-            ViewBag.userManager = _userManagerService.GetAccess();
-            var usersViewModel = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserViewModel>>(users);
+            var users = _userManagerService.GetUsers();
+            ViewBag.userManagerService = _userManagerService;
+            var usersViewModel = Mapper.Map<IEnumerable<ApplicationUserDomainModel>, IEnumerable<ApplicationUserViewModel>>(users);
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_UserManipulation", usersViewModel);
@@ -44,23 +45,16 @@ namespace Auction.Web.Controllers
             {
                 return HttpNotFound();
             }
-            var isTargetUserModerator = _userManagerService.GetAccess().IsInRole(targetUserId, "Moderator");
+            var isTargetUserModerator = _userManagerService.IsInRole(targetUserId, "Moderator");
             if (isTargetUserModerator)
             {
-                _userManagerService.GetAccess().RemoveFromRole(targetUserId, "Moderator");
+                _userManagerService.RemoveFromRole(targetUserId, "Moderator");
             }
             else
             {
-                _userManagerService.GetAccess().AddToRole(targetUserId, "Moderator");
+                _userManagerService.AddToRole(targetUserId, "Moderator");
             }
             return UserManagement();
-        }
-
-        private string GetUserId(string name)
-        {
-            var targetUser = _userManagerService.GetAccess().FindByName(name);
-            var targetUserId = targetUser.Id;
-            return targetUserId;
         }
 
         [Authorize(Roles = "Administrator, Moderator")]
@@ -70,22 +64,36 @@ namespace Auction.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var targetUser = _userManagerService.GetAccess().FindByName(name);
+            var targetUser = _userManagerService.FindByName(name);
             if (targetUser == null)
             {
                 return HttpNotFound();
             }
-            var isUserPerformingActionModerator = _userManagerService.GetAccess().IsInRole(User.Identity.GetUserId(), "Moderator");
-            var isTargetUserModerator = _userManagerService.GetAccess().IsInRole(targetUser.Id, "Moderator");
+            var isUserPerformingActionModerator = _userManagerService.IsInRole(User.Identity.GetUserId(), "Moderator");
+            var isTargetUserModerator = _userManagerService.IsInRole(targetUser.Id, "Moderator");
 
-            if (User.IsInRole("Administrator") || (isUserPerformingActionModerator && !isTargetUserModerator))
+            if (!User.IsInRole("Administrator") && (!isUserPerformingActionModerator || isTargetUserModerator))
             {
-                targetUser.IsBanned = !targetUser.IsBanned;
-                _userManagerService.GetAccess().Update(targetUser);
+                return UserManagement();
+            }
+            if (targetUser.IsBanned)
+            {
+                _userManagerService.UnbanUser(targetUser.Id);
+            }
+            else
+            {
+                _userManagerService.BanUser(targetUser.Id);
             }
             return UserManagement();
         }
 
+        #region serviceMethods
+        private string GetUserId(string name)
+        {
+            var targetUser = _userManagerService.FindByName(name);
+            var targetUserId = targetUser.Id;
+            return targetUserId;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -94,5 +102,6 @@ namespace Auction.Web.Controllers
             }
             base.Dispose(disposing);
         }
+        #endregion
     }
 }

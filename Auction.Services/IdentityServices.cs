@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 
-namespace Auction.Web
+namespace Auction.Services
 {
     public class EmailService : IIdentityMessageService
     {
@@ -10,9 +10,10 @@ namespace Auction.Web
             const string credentialUserName = "rentservicegg@gmail.com";
             const string sentFrom = "noreply@effective-rent.com";
             const string pwd = "bdfbdr34523gsdfh6DD";
+            const string host = "smtp.gmail.com";
 
             // Configure the client:
-            System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+            System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(host);
 
             client.Port = 587;
             client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;

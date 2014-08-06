@@ -2,11 +2,8 @@
 
 namespace Auction.Services.Interfaces
 {
-    public interface IService : IDisposable
+    public interface IService: IDisposable
     {
-        void Save();
-
-        void DisableValidationOnSave();
 
     }
 }

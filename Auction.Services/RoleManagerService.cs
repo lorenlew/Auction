@@ -1,4 +1,5 @@
-﻿using Auction.Services.Interfaces;
+﻿using Auction.DAL.UnitOfWork;
+using Auction.Services.Interfaces;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -6,9 +7,14 @@ namespace Auction.Services
 {
     public class RoleManagerService : BaseService, IRoleManagerService
     {
-        public RoleManager<IdentityRole> GetAccess()
+        public RoleManagerService(IUnitOfWork unitOfWork)
+            : base(unitOfWork)
         {
-            return Uow.RoleManager;
+        }
+
+        public RoleManager<IdentityRole> RoleManager
+        {
+            get { return Uow.RoleManager; }
         }
     }
 }

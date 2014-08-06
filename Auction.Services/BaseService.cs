@@ -1,7 +1,6 @@
 ﻿using System;
+using Auction.DAL.UnitOfWork;
 using Auction.Services.Interfaces;
-using Auction.UoW.Interfaces;
-using Auction.UoW.Repositories;
 
 namespace Auction.Services
 {
@@ -11,19 +10,10 @@ namespace Auction.Services
 
         protected readonly IUnitOfWork Uow;
 
-        protected BaseService()
+        public BaseService(IUnitOfWork unitOfWork)
         {
-            Uow = new UnitOfWork();
-        }
-
-        public void Save()
-        {
-            Uow.Save();
-        }
-
-        public void DisableValidationOnSave()
-        {
-            Uow.DisableValidationOnSave(); 
+            if (unitOfWork == null) throw new ArgumentNullException("unitOfWork");
+            Uow = unitOfWork;
         }
 
         private void Dispose(bool disposing)

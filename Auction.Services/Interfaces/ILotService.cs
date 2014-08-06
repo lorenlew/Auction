@@ -1,21 +1,33 @@
 ﻿using System.Collections.Generic;
 using Auction.Domain.DerivativeModels;
 using Auction.Domain.Models;
-using Auction.UoW.Interfaces;
 
 namespace Auction.Services.Interfaces
 {
     public interface ILotService : IService
     {
-        IRepository<Lot> GetRepository();
 
-        IEnumerable<LotStake> GetAll();
+        IEnumerable<LotStakeDomainModel> GetAll();
 
-        IEnumerable<LotStake> GetAvailable();
+        IEnumerable<LotStakeDomainModel> GetAvailable();
 
-        IEnumerable<LotStake> GetSold();
+        IEnumerable<LotStakeDomainModel> GetSold();
 
-        LotStake FindById(int id);
+        LotStakeDomainModel FindById(int id);
+
+        void Add(LotDomainModel entity);
+
+        IEnumerable<LotDomainModel> Read();
+
+        LotDomainModel ReadById(int id);
+
+        void Update(LotDomainModel entity);
+
+        void Delete(LotDomainModel entity);
+
+        void Save();
+
+        void DisableValidationOnSave();
 
     }
 }

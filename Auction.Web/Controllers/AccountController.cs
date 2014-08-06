@@ -6,7 +6,6 @@ using Auction.Domain.Models;
 using Auction.Services.Interfaces;
 using Auction.Web.ViewModels;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 
 namespace Auction.Web.Controllers
@@ -14,51 +13,14 @@ namespace Auction.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IUserManagerService _userManagerService;
+
         public AccountController(IUserManagerService userManagerService)
         {
-            if (userManagerService != null)
-            {
-                UserManager = InitUserManager(userManagerService.GetAccess());
-            }
+            if (userManagerService == null) throw new ArgumentNullException("userManagerService");
+                _userManagerService = userManagerService;
+
         }
-
-        private UserManager<ApplicationUser> InitUserManager(UserManager<ApplicationUser> manager)
-        {
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
-            {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
-            };
-
-            manager.PasswordValidator = new PasswordValidator
-            {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
-            };
-            manager.RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "Your security code is: {0}"
-            });
-            manager.RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is: {0}"
-            });
-            manager.EmailService = new EmailService();
-            manager.SmsService = new SmsService();
-            var identityFactoryOptions = new IdentityFactoryOptions<UserManager<ApplicationUser>>();
-            var dataProtectionProvider = identityFactoryOptions.DataProtectionProvider;
-            if (dataProtectionProvider != null)
-            {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
-            }
-            return manager;
-        }
-
-        private UserManager<ApplicationUser> UserManager { get; set; }
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -75,7 +37,7 @@ namespace Auction.Web.Controllers
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindAsync(model.Email, model.Password);
+                var user = await _userManagerService.FindAsync(model.Email, model.Password);
                 if (user != null && user.EmailConfirmed && !user.IsBanned)
                 {
                     await SignInAsync(user, model.RememberMe);
@@ -117,7 +79,7 @@ namespace Auction.Web.Controllers
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser()
+                var user = new ApplicationUserDomainModel()
                 {
                     UserName = model.Email,
                     Email = model.Email,
@@ -125,12 +87,12 @@ namespace Auction.Web.Controllers
                     LastName = model.LastName,
                     PhoneNumber = model.PhoneNumber,
                 };
-                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                IdentityResult result = await _userManagerService.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    string code = await _userManagerService.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await _userManagerService.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     return View("CheckEmail");
                 }
@@ -147,7 +109,7 @@ namespace Auction.Web.Controllers
                 return View("Error");
             }
 
-            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
+            IdentityResult result = await _userManagerService.ConfirmEmailAsync(userId, code);
             if (result.Succeeded)
             {
                 return View("ConfirmEmail");
@@ -170,15 +132,15 @@ namespace Auction.Web.Controllers
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                var user = await _userManagerService.FindByNameAsync(model.Email);
+                if (user == null || !(await _userManagerService.IsEmailConfirmedAsync(user.Id)))
                 {
                     ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
                     return View();
                 }
-                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                string code = await _userManagerService.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                await _userManagerService.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
             return View(model);
@@ -208,13 +170,13 @@ namespace Auction.Web.Controllers
             if (model == null) throw new ArgumentNullException("model");
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await _userManagerService.FindByNameAsync(model.Email);
                 if (user == null)
                 {
                     ModelState.AddModelError("", "No user found.");
                     return View();
                 }
-                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+                IdentityResult result = await _userManagerService.ResetPasswordAsync(user.Id, model.Code, model.Password);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -236,10 +198,10 @@ namespace Auction.Web.Controllers
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
             ManageMessageId? message = null;
-            IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            IdentityResult result = await _userManagerService.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await _userManagerService.FindByIdAsync(User.Identity.GetUserId());
                 await SignInAsync(user, isPersistent: false);
                 message = ManageMessageId.RemoveLoginSuccess;
             }
@@ -275,10 +237,10 @@ namespace Auction.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    IdentityResult result = await _userManagerService.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                        var user = await _userManagerService.FindByIdAsync(User.Identity.GetUserId());
                         await SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
@@ -296,7 +258,7 @@ namespace Auction.Web.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                    IdentityResult result = await _userManagerService.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
@@ -328,7 +290,7 @@ namespace Auction.Web.Controllers
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            var user = await UserManager.FindAsync(loginInfo.Login);
+            var user = await _userManagerService.FindAsync(loginInfo.Login);
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
@@ -358,7 +320,7 @@ namespace Auction.Web.Controllers
             {
                 return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
             }
-            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+            IdentityResult result = await _userManagerService.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             if (result.Succeeded)
             {
                 return RedirectToAction("Manage");
@@ -384,21 +346,21 @@ namespace Auction.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser()
+                var user = new ApplicationUserDomainModel()
                 {
                     UserName = model.Email
                 };
-                IdentityResult result = await UserManager.CreateAsync(user);
+                IdentityResult result = await _userManagerService.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    result = await _userManagerService.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
                         await SignInAsync(user, isPersistent: false);
 
                         // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                         // Send an email with this link
-                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        string code = await _userManagerService.GenerateEmailConfirmationTokenAsync(user.Id);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         SendEmail(user.Email, callbackUrl, "Confirm your account", "Please confirm your account by clicking this link");
 
@@ -429,17 +391,16 @@ namespace Auction.Web.Controllers
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
-            var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
+            var linkedAccounts = _userManagerService.GetLogins(User.Identity.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && UserManager != null)
+            if (disposing && _userManagerService != null)
             {
-                UserManager.Dispose();
-                UserManager = null;
+                _userManagerService.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -456,10 +417,10 @@ namespace Auction.Web.Controllers
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        private async Task SignInAsync(ApplicationUserDomainModel user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, await user.GenerateUserIdentityAsync(UserManager));
+            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, await _userManagerService.GenerateUserIdentityAsync(user));
         }
 
         private void AddErrors(IdentityResult result)
@@ -472,7 +433,7 @@ namespace Auction.Web.Controllers
 
         private bool HasPassword()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = _userManagerService.FindById(User.Identity.GetUserId());
             if (user != null)
             {
                 return user.PasswordHash != null;
